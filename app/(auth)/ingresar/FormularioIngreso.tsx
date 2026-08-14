@@ -71,7 +71,7 @@ export function FormularioIngreso() {
         </div>
 
         {estado.error && (
-          <p id="error" role="alert" className="text-sm text-venus">
+          <p id="error" role="alert" className="whitespace-pre-line text-sm text-venus">
             {estado.error}
           </p>
         )}

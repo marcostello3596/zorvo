@@ -29,6 +29,18 @@ npx localtunnel --port 3000
 
 Sí, se puede: cada `git push` dispara un despliegue solo. Es exactamente el flujo que conviene.
 
+### Paso 0 — Compilar local primero
+
+```bash
+npm run build
+```
+
+**No te saltees esto.** `npm run dev` es permisivo: compila cada página a medida que la visitás y muchos errores de tipos no aparecen hasta que alguien entra a esa ruta. `npm run build` compila todo de una y es exactamente lo que va a correr Vercel.
+
+Si falla acá, lo arreglás con el error completo delante. Si falla en Vercel, lo leés en un panel de logs, esperando dos minutos por intento.
+
+Es muy probable que aparezca algo la primera vez: todo este código se escribió sin poder ejecutarlo. Pasame los errores y los corrijo de una.
+
 ### Antes de subir nada
 
 Verificá que `.env.local` no vaya a entrar al repositorio:

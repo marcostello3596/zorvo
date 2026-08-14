@@ -19,7 +19,16 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const emailSchema = z.string().trim().toLowerCase().email("Ese email no parece válido");
 const nombreSchema = z.string().trim().min(1, "Necesitamos saber cómo llamarte").max(60);
-const codigoSchema = z.string().trim().regex(/^\d{6}$/, "El código son 6 dígitos");
+/**
+ * La longitud del código la define Supabase (Authentication → Providers →
+ * Email → Email OTP Length), y va de 6 a 10 según cómo esté el proyecto.
+ * Fijarla acá en 6 hacía que un cambio de configuración del servidor rompiera
+ * el login sin que nada en el código lo explicara.
+ */
+const codigoSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{4,10}$/, "El código son solo números, los del último mail");
 
 export type EstadoAuth = { error?: string };
 
@@ -84,15 +93,25 @@ export async function verificar(
 
   const supabase = await createSupabaseServerClient();
 
-  const { error } = await supabase.auth.verifyOtp({
-    email: email.data,
-    token: codigo.data,
-    type: "email",
-  });
+  // Supabase usa un tipo de token distinto según qué plantilla disparó el
+  // mail: "email" para el OTP de ingreso, "signup" para la confirmación de
+  // alta de un usuario nuevo. Desde la pantalla son seis dígitos idénticos,
+  // así que probamos los dos en vez de obligar al socio a saber cuál le tocó.
+  const tipos = ["email", "signup"] as const;
+  let ultimoError = "";
 
-  if (error) return { error: traducir(error.message) };
+  for (const type of tipos) {
+    const { error } = await supabase.auth.verifyOtp({
+      email: email.data,
+      token: codigo.data,
+      type,
+    });
 
-  redirect("/club");
+    if (!error) redirect("/club");
+    ultimoError = error.message;
+  }
+
+  return { error: traducir(ultimoError) };
 }
 
 /**
@@ -135,9 +154,17 @@ export async function salir() {
 /**
  * Los mensajes de Supabase vienen en inglés y con vocabulario de auth.
  * El socio no tiene por qué leer "OTP" ni "signups not allowed".
+ *
+ * REGLA: el mensaje original NUNCA se descarta. Se registra siempre en el
+ * servidor, y en desarrollo se muestra en pantalla. Tragarse el error real
+ * para mostrar uno bonito deja a quien programa sin nada para investigar —
+ * que es exactamente lo que pasó la primera vez que esto falló.
  */
 function traducir(mensaje: string): string {
+  console.error("[zorvo:auth]", mensaje);
+
   const m = mensaje.toLowerCase();
+
   if (m.includes("signups not allowed") || m.includes("user not found")) {
     return "No encontramos ese email. ¿Querés sumarte al Club?";
   }
@@ -150,5 +177,27 @@ function traducir(mensaje: string): string {
   if (m.includes("rate limit") || m.includes("too many")) {
     return "Demasiados intentos seguidos. Esperá un minuto.";
   }
-  return "Algo falló de nuestro lado. Probá de nuevo en un momento.";
+
+  // El caso más común al configurar SMTP por primera vez. Supabase lo
+  // reporta como error de envío sin decir por qué falló el servidor.
+  if (
+    m.includes("sending") ||
+    m.includes("smtp") ||
+    m.includes("email address") ||
+    m.includes("confirmation email")
+  ) {
+    return dev(
+      "No se pudo enviar el mail. Revisá SMTP Settings en Supabase: host smtp.gmail.com, puerto 587, y la contraseña de aplicación de 16 caracteres (no la de tu cuenta).",
+      mensaje,
+    );
+  }
+
+  return dev("Algo falló de nuestro lado. Probá de nuevo en un momento.", mensaje);
+}
+
+/** En desarrollo suma el error crudo; en producción no filtra nada. */
+function dev(paraElSocio: string, original: string): string {
+  return process.env.NODE_ENV === "production"
+    ? paraElSocio
+    : `${paraElSocio}\n\n[dev] ${original}`;
 }

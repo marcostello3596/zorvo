@@ -89,12 +89,12 @@ export default function Join() {
                 className="h-14 w-full rounded-[2px] border-2 border-[var(--zrv-espresso-500)] bg-[var(--zrv-espresso-800)] px-4 text-lg text-cream placeholder:text-[var(--zrv-espresso-400)] focus:border-venus focus:outline-none"
               />
               <p id="email-hint" className="mt-2 text-sm text-cream/70">
-                Te mandamos un código de 6 dígitos. Sin contraseñas.
+                Te mandamos un código por mail. Sin contraseñas.
               </p>
             </div>
 
             {estado.error && (
-              <p id="error" role="alert" className="text-sm text-venus">
+              <p id="error" role="alert" className="whitespace-pre-line text-sm text-venus">
                 {estado.error}
               </p>
             )}

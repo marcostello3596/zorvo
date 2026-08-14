@@ -32,18 +32,20 @@ function Formulario() {
           type="text"
           inputMode="numeric"
           autoComplete="one-time-code"
-          maxLength={6}
+          maxLength={10}
           required
           autoFocus
-          placeholder="000000"
+          placeholder="······"
           aria-describedby={estado.error ? "error" : undefined}
           aria-invalid={estado.error ? true : undefined}
-          className="zrv-data h-16 w-full rounded-[2px] border-2 border-[var(--zrv-espresso-500)] bg-[var(--zrv-espresso-800)] px-4 text-center text-3xl tracking-[0.4em] text-cream placeholder:text-[var(--zrv-espresso-500)] focus:border-venus focus:outline-none"
+          // El tracking es menor que el de un campo de 6 fijo: con 8 o 10
+          // dígitos, 0.4em desbordaba en pantallas angostas.
+          className="zrv-data h-16 w-full rounded-[2px] border-2 border-[var(--zrv-espresso-500)] bg-[var(--zrv-espresso-800)] px-4 text-center text-3xl tracking-[0.2em] text-cream placeholder:text-[var(--zrv-espresso-500)] focus:border-venus focus:outline-none"
         />
       </div>
 
       {estado.error && (
-        <p id="error" role="alert" className="text-sm text-venus">
+        <p id="error" role="alert" className="whitespace-pre-line text-sm text-venus">
           {estado.error}
         </p>
       )}
@@ -88,7 +90,7 @@ export default function Verificar() {
             Mirá tu mail
           </h1>
           <p className="mt-4 max-w-[36ch] text-base leading-relaxed text-cream/85">
-            Te mandamos un código de 6 dígitos. Vence en 10 minutos.
+            Te mandamos un código. Vence en 10 minutos.
           </p>
 
           <Suspense fallback={<p className="mt-10 text-cream/60">Cargando…</p>}>
