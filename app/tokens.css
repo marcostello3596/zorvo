@@ -1,0 +1,386 @@
+/* ============================================================================
+   ZORVO — DESIGN TOKENS
+   Fuente de verdad: ZRV_Presentación.pdf (Mutte, jul 2026)
+   Compatible con Tailwind CSS v4 (@theme) y CSS puro.
+
+   REGLA: ningún componente escribe un valor de color, spacing o radius
+   literal. Todo pasa por estos tokens. Extender aquí, nunca en el componente.
+   ============================================================================ */
+
+@layer theme {
+  :root {
+    /* ------------------------------------------------------------------
+       1. PALETA PRIMITIVA
+       Los 4 colores de marca (extraídos del PDF, pág. 8) + rampas
+       derivadas manteniendo el hue y la croma originales.
+       Los valores base están anclados y son EXACTOS al PDF.
+       ------------------------------------------------------------------ */
+
+    /* ESPRESSO — #76262F (anclado en 700). Primario. Vino profundo, no marrón. */
+    --zrv-espresso-50:  #FFF1F1;
+    --zrv-espresso-100: #FFE3E3;
+    --zrv-espresso-200: #FAC9C9;
+    --zrv-espresso-300: #EAA6A8;
+    --zrv-espresso-400: #D38084;
+    --zrv-espresso-500: #B75C62;
+    --zrv-espresso-600: #993F47;
+    --zrv-espresso-700: #76262F; /* ★ MARCA */
+    --zrv-espresso-800: #5F1821;
+    --zrv-espresso-900: #470D16;
+    --zrv-espresso-950: #2D060B;
+
+    /* DARK OLIVE — #30431F (anclado en 700). Secundario. Verde profundo. */
+    --zrv-olive-50:  #F3F8EF;
+    --zrv-olive-100: #E6EFDF;
+    --zrv-olive-200: #CEDCC4;
+    --zrv-olive-300: #AFC2A1;
+    --zrv-olive-400: #8EA47C;
+    --zrv-olive-500: #6D855A;
+    --zrv-olive-600: #4D633A;
+    --zrv-olive-700: #30431F; /* ★ MARCA */
+    --zrv-olive-800: #233413;
+    --zrv-olive-900: #18260B;
+    --zrv-olive-950: #0D1705;
+
+    /* YELLOW VENUS — #FFC744 (anclado en 400). Acento. Energía / recompensa. */
+    --zrv-yellow-50:  #FFF8E7;
+    --zrv-yellow-100: #FFF0CB;
+    --zrv-yellow-200: #FFE29E;
+    --zrv-yellow-300: #FFD573;
+    --zrv-yellow-400: #FFC744; /* ★ MARCA */
+    --zrv-yellow-500: #ECB209;
+    --zrv-yellow-600: #CE9500;
+    --zrv-yellow-700: #AD7900;
+    --zrv-yellow-800: #8A5D00;
+    --zrv-yellow-900: #674200;
+    --zrv-yellow-950: #422800;
+
+    /* STONE — neutral cálido derivado del off-white de marca #F3F5EE.
+       Hue 110° con croma mínima: lee como papel y hormigón, no como gris azulado.
+       stone-150 ≈ GRAY HINT #E6E6E6 del PDF. */
+    --zrv-stone-0:    #FDFEF9;
+    --zrv-stone-50:   #F7F7F3;
+    --zrv-stone-100:  #EFEFEB;
+    --zrv-stone-150:  #E6E7E2; /* ≈ GRAY HINT */
+    --zrv-stone-200:  #DBDBD7;
+    --zrv-stone-300:  #C4C4C0;
+    --zrv-stone-400:  #A5A5A1;
+    --zrv-stone-500:  #868682;
+    --zrv-stone-600:  #696965;
+    --zrv-stone-700:  #4D4E47;
+    --zrv-stone-800:  #353630;
+    --zrv-stone-900:  #21211B;
+    --zrv-stone-950:  #12120D;
+    --zrv-stone-1000: #080905;
+
+    /* CREAM — off-white exacto del PDF (pág. 9, fondo de los lockups). */
+    --zrv-cream: #F3F5EE;
+
+    /* ALERT RED — NO es de marca. Existe porque Espresso es rojo y no puede
+       significar "destructivo" sin ambigüedad. Hue desplazado a naranja-rojo
+       y croma alta para que sea inconfundible junto al vino de marca. */
+    --zrv-alert-100: #FCE4DE;
+    --zrv-alert-500: #C43A22;
+    --zrv-alert-700: #8E2413;
+    --zrv-alert-900: #5A1408;
+
+    /* ------------------------------------------------------------------
+       2. TOKENS SEMÁNTICOS — SUPERFICIE PAPEL (default)
+       ------------------------------------------------------------------ */
+
+    --background:          var(--zrv-cream);
+    --foreground:          var(--zrv-stone-900);   /* 14.7:1 AAA */
+    --foreground-muted:    var(--zrv-stone-600);   /*  5.0:1 AA  */
+    --foreground-subtle:   var(--zrv-stone-500);   /* solo texto ≥18px o UI */
+
+    --surface:             var(--zrv-stone-0);
+    --surface-muted:       var(--zrv-stone-100);
+    --surface-sunken:      var(--zrv-stone-150);
+    --surface-inverse:     var(--zrv-stone-950);
+    --surface-inverse-fg:  var(--zrv-cream);
+
+    /* Bordes: la profundidad en Zorvo se construye con LÍNEA, no con sombra. */
+    --border-hairline:     var(--zrv-stone-300);
+    --border:              var(--zrv-stone-400);
+    --border-interactive:  var(--zrv-stone-500);   /* inputs — 3.6:1 AA UI */
+    --border-strong:       var(--zrv-stone-900);
+
+    --primary:             var(--zrv-espresso-700);
+    --primary-hover:       var(--zrv-espresso-800);
+    --primary-active:      var(--zrv-espresso-900);
+    --primary-foreground:  var(--zrv-cream);       /* 9.2:1 AAA */
+    --primary-subtle:      var(--zrv-espresso-50);
+    --primary-subtle-fg:   var(--zrv-espresso-900);
+
+    --secondary:           var(--zrv-olive-700);
+    --secondary-hover:     var(--zrv-olive-800);
+    --secondary-foreground:var(--zrv-cream);       /* 9.8:1 AAA */
+    --secondary-subtle:    var(--zrv-olive-100);
+    --secondary-subtle-fg: var(--zrv-olive-800);
+
+    --accent:              var(--zrv-yellow-400);
+    --accent-hover:        var(--zrv-yellow-500);
+    --accent-foreground:   var(--zrv-espresso-900); /* 10.1:1 AAA */
+    --accent-subtle:       var(--zrv-yellow-100);
+    --accent-subtle-fg:    var(--zrv-yellow-900);
+
+    /* success y warning son colores de MARCA: el verde y el amarillo de Zorvo
+       hacen el trabajo. Solo danger es ajeno, y por buena razón. */
+    --success:             var(--zrv-olive-600);
+    --success-foreground:  var(--zrv-cream);
+    --success-subtle:      var(--zrv-olive-100);
+    --success-subtle-fg:   var(--zrv-olive-800);   /* 11.3:1 AAA */
+
+    --warning:             var(--zrv-yellow-400);
+    --warning-foreground:  var(--zrv-espresso-900);
+    --warning-text:        var(--zrv-yellow-800);  /* 5.2:1 AA — NUNCA usar
+                                                      yellow-400/500/600 como
+                                                      texto sobre papel */
+    --warning-subtle:      var(--zrv-yellow-100);
+    --warning-subtle-fg:   var(--zrv-yellow-900);  /* 7.9:1 AAA */
+
+    --danger:              var(--zrv-alert-500);   /* 4.8:1 AA */
+    --danger-hover:        var(--zrv-alert-700);
+    --danger-foreground:   #FFFFFF;                /* 5.3:1 AA */
+    --danger-subtle:       var(--zrv-alert-100);
+    --danger-subtle-fg:    var(--zrv-alert-900);
+
+    --focus-ring:          var(--zrv-espresso-700);
+    --focus-ring-inverse:  var(--zrv-yellow-400);
+
+    /* ------------------------------------------------------------------
+       3. ESCALA TIPOGRÁFICA
+       next/font define --font-sofia / --font-hanken / --font-martian en el
+       <html>. Fuera de Next esas variables no existen y cae al nombre
+       literal de la familia. Una sola definición, dos entornos.
+       ------------------------------------------------------------------ */
+
+    --font-display: var(--font-sofia, "Sofia Sans Extra Condensed"), "Arial Narrow", sans-serif;
+    --font-sans:    var(--font-hanken, "Hanken Grotesk"), ui-sans-serif, system-ui, sans-serif;
+    --font-mono:    var(--font-martian, "Martian Mono"), ui-monospace, "SF Mono", monospace;
+
+    --text-display-2xl: 4.5rem;   --leading-display-2xl: 0.92;
+    --text-display-xl:  3.5rem;   --leading-display-xl:  0.94;
+    --text-display-lg:  2.75rem;  --leading-display-lg:  0.96;
+    --text-display-md:  2rem;     --leading-display-md:  1.00;
+    --text-display-sm:  1.5rem;   --leading-display-sm:  1.04;
+    --tracking-display: 0.02em;
+
+    --text-h1: 2rem;      --leading-h1: 1.15;
+    --text-h2: 1.5rem;    --leading-h2: 1.20;
+    --text-h3: 1.25rem;   --leading-h3: 1.30;
+    --text-h4: 1.0625rem; --leading-h4: 1.35;
+
+    --text-body-lg: 1.125rem; --leading-body-lg: 1.55;
+    --text-body:    1rem;     --leading-body:    1.55;
+    --text-body-sm: 0.875rem; --leading-body-sm: 1.50;
+
+    --text-label:    0.75rem;  --leading-label:    1.30; --tracking-label:    0.10em;
+    --text-label-sm: 0.6875rem;--leading-label-sm: 1.30; --tracking-label-sm: 0.12em;
+
+    --text-caption: 0.75rem;  --leading-caption: 1.45;
+
+    --text-data-xl: 2.5rem; --leading-data-xl: 1.00;
+    --text-data-lg: 1.5rem; --leading-data-lg: 1.10;
+    --text-data:    0.875rem;--leading-data:   1.40;
+    --tracking-data: -0.02em;
+
+    --weight-light: 300;
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+
+    /* ------------------------------------------------------------------
+       4. SPACING — base 4px
+       ------------------------------------------------------------------ */
+
+    --space-0:  0;
+    --space-1:  0.25rem;
+    --space-2:  0.5rem;
+    --space-3:  0.75rem;
+    --space-4:  1rem;
+    --space-5:  1.25rem;
+    --space-6:  1.5rem;
+    --space-8:  2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+    --space-32: 8rem;
+
+    --pad-block-club:  var(--space-8);
+    --pad-inline-club: var(--space-6);
+    --gap-club:        var(--space-6);
+
+    --pad-block-ops:   var(--space-4);
+    --pad-inline-ops:  var(--space-4);
+    --gap-ops:         var(--space-3);
+
+    --row-height-ops:  2.75rem;  /* 44 */
+    --control-height:  2.75rem;  /* 44 — mínimo táctil WCAG 2.5.8 */
+    --control-height-sm: 2.25rem;
+    --control-height-lg: 3.25rem;
+
+    /* ------------------------------------------------------------------
+       5. RADIUS
+       El PDF es predominantemente RECTO. Operations: 0–2px.
+       Club: hasta 16px en momentos emocionales.
+       ------------------------------------------------------------------ */
+
+    --radius-none: 0px;
+    --radius-xs:   2px;
+    --radius-sm:   4px;
+    --radius-md:   8px;
+    --radius-lg:   16px;
+    --radius-xl:   24px;
+    --radius-full: 9999px;
+
+    --radius-surface-ops:  var(--radius-xs);
+    --radius-surface-club: var(--radius-lg);
+
+    /* ------------------------------------------------------------------
+       6. BORDES Y "ELEVACIÓN"
+       Zorvo no usa sombra para jerarquía. Usa bloque de color, línea y aire.
+       ------------------------------------------------------------------ */
+
+    --border-width-hairline: 1px;
+    --border-width:          1px;
+    --border-width-strong:   2px;
+    --border-width-editorial:3px;
+
+    --shadow-none: none;
+    --shadow-overlay: 0 8px 24px -8px rgb(33 33 27 / 0.18),
+                      0 2px 6px -2px rgb(33 33 27 / 0.10);
+    --shadow-sticky:  0 1px 0 0 var(--zrv-stone-300);
+
+    /* ------------------------------------------------------------------
+       7. TEXTURA — firma de marca
+       Solo sobre campos grandes de color. NUNCA sobre tablas o texto denso.
+       ------------------------------------------------------------------ */
+
+    --texture-grain-opacity: 0.055;
+    --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+
+    /* ------------------------------------------------------------------
+       8. MOTION — "El momento es corto." Nada rebota, nada se demora.
+       ------------------------------------------------------------------ */
+
+    --duration-instant: 90ms;
+    --duration-fast:    140ms;
+    --duration-normal:  200ms;
+    --duration-slow:    320ms;
+
+    --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in:   cubic-bezier(0.64, 0, 0.78, 0);
+    --ease-both: cubic-bezier(0.65, 0, 0.35, 1);
+
+    /* ------------------------------------------------------------------
+       9. LAYOUT
+       ------------------------------------------------------------------ */
+
+    --container-club: 30rem;   /* 480 — el Club es móvil primero, siempre */
+    --container-prose: 44rem;
+    --container-ops:  90rem;
+    --sidebar-ops:    15rem;
+    --header-height:  3.5rem;
+
+    --z-base: 0;
+    --z-sticky: 10;
+    --z-drawer: 40;
+    --z-dialog: 50;
+    --z-toast: 60;
+    --z-scanner-overlay: 70;
+  }
+
+  /* ====================================================================
+     SUPERFICIE MARCA — no es "dark mode", es el campo de color de Zorvo.
+     Uso: <section data-surface="espresso"> … </section>
+     ==================================================================== */
+
+  [data-surface="espresso"] {
+    --background:         var(--zrv-espresso-700);
+    --foreground:         var(--zrv-cream);
+    --foreground-muted:   var(--zrv-espresso-200);
+    --surface:            var(--zrv-espresso-800);
+    --surface-muted:      var(--zrv-espresso-800);
+    --border-hairline:    var(--zrv-espresso-600);
+    --border:             var(--zrv-espresso-500);
+    --primary:            var(--zrv-yellow-400);
+    --primary-hover:      var(--zrv-yellow-300);
+    --primary-foreground: var(--zrv-espresso-900);
+    --accent:             var(--zrv-yellow-400);
+    --accent-foreground:  var(--zrv-espresso-900);
+    --focus-ring:         var(--zrv-yellow-400);
+  }
+
+  [data-surface="olive"] {
+    --background:         var(--zrv-olive-700);
+    --foreground:         var(--zrv-cream);
+    --foreground-muted:   var(--zrv-olive-200);
+    --surface:            var(--zrv-olive-800);
+    --border-hairline:    var(--zrv-olive-600);
+    --border:             var(--zrv-olive-500);
+    --primary:            var(--zrv-yellow-400);
+    --primary-foreground: var(--zrv-olive-900);
+    --accent:             var(--zrv-yellow-400);
+    --accent-foreground:  var(--zrv-olive-900);
+    --focus-ring:         var(--zrv-yellow-400);
+  }
+
+  /* Campo amarillo: recompensa desbloqueada. El amarillo NUNCA es color de
+     texto sobre claro. */
+  [data-surface="yellow"] {
+    --background:         var(--zrv-yellow-400);
+    --foreground:         var(--zrv-espresso-900);
+    --foreground-muted:   var(--zrv-yellow-900);
+    --surface:            var(--zrv-yellow-300);
+    --border-hairline:    var(--zrv-yellow-600);
+    --border:             var(--zrv-yellow-700);
+    --primary:            var(--zrv-espresso-700);
+    --primary-foreground: var(--zrv-yellow-400);
+    --focus-ring:         var(--zrv-espresso-900);
+  }
+
+  /* Modo noche de Operations — la barra abre temprano y cierra tarde.
+     No es un dark mode genérico: el canvas es tinta cálida, no gris azul. */
+  [data-theme="night"] {
+    --background:          var(--zrv-stone-1000);
+    --foreground:          var(--zrv-stone-100);
+    --foreground-muted:    var(--zrv-stone-400);
+    --surface:             var(--zrv-stone-950);
+    --surface-muted:       var(--zrv-stone-900);
+    --surface-sunken:      var(--zrv-stone-1000);
+    --border-hairline:     var(--zrv-stone-800);
+    --border:              var(--zrv-stone-700);
+    --border-interactive:  var(--zrv-stone-600);
+    --border-strong:       var(--zrv-stone-400);
+    --primary:             var(--zrv-espresso-400);
+    --primary-hover:       var(--zrv-espresso-300);
+    --primary-foreground:  var(--zrv-espresso-950);
+    --primary-subtle:      var(--zrv-espresso-950);
+    --primary-subtle-fg:   var(--zrv-espresso-200);
+    --secondary:           var(--zrv-olive-400);
+    --secondary-foreground:var(--zrv-olive-950);
+    --success:             var(--zrv-olive-400);
+    --success-subtle:      var(--zrv-olive-950);
+    --success-subtle-fg:   var(--zrv-olive-200);
+    --warning-text:        var(--zrv-yellow-300);
+    --warning-subtle:      var(--zrv-yellow-950);
+    --warning-subtle-fg:   var(--zrv-yellow-200);
+    --danger:              #E86A50;
+    --danger-foreground:   var(--zrv-alert-900);
+    --focus-ring:          var(--zrv-yellow-400);
+    --shadow-overlay:      0 8px 24px -8px rgb(0 0 0 / 0.60);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --duration-instant: 0ms;
+      --duration-fast: 0ms;
+      --duration-normal: 0ms;
+      --duration-slow: 0ms;
+    }
+  }
+}
