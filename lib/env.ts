@@ -39,7 +39,10 @@ export const clientEnv = parse(
   clientSchema,
   {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    // La integración de Supabase en Vercel puede cargar la clave con el
+    // nombre nuevo (publishable). Las dos sirven igual.
+    NEXT_PUBLIC_SUPABASE_ANON_KEY:
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   },
   "cliente",
 );
@@ -53,5 +56,13 @@ export function getServerEnv() {
   if (typeof window !== "undefined") {
     throw new Error("getServerEnv() se llamó desde el navegador");
   }
-  return parse(serverSchema, process.env, "servidor");
+  return parse(
+    serverSchema,
+    {
+      ...process.env,
+      // Ídem: la secret key nueva (sb_secret_…) reemplaza a la service_role.
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY,
+    },
+    "servidor",
+  );
 }

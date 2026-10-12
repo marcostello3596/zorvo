@@ -42,25 +42,58 @@ entra con un código por mail, en cualquier teléfono.
 
 ## Para ponerlo en marcha
 
-1. **Base de datos.** Aplicá las dos migraciones nuevas, igual que las anteriores:
-   ```bash
-   npx supabase db push
-   ```
-   (o pegá en el SQL Editor, en orden, `supabase/migrations/20261012000100_punch_kind.sql`
-   y `supabase/migrations/20261012000200_tarjeta_de_la_z.sql`).
-   Después corré `supabase/tests/tarjeta_verificacion.sql` en el SQL Editor:
-   tienen que salir todas las filas en `OK`.
-2. **Productos y local.** Si nunca corriste `supabase/seed.sql`, corrélo: carga
-   el local y la carta. Los precios y nombres se cambian desde la tabla `products`.
-3. **Variables en Vercel** (Settings → Environment Variables):
-   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
-   `SUPABASE_SERVICE_ROLE_KEY`, `CREDENTIAL_HMAC_MASTER` y la nueva
-   `ZORVO_OWNER_EMAILS` con el email del dueño.
-4. **Mail.** La plantilla Magic Link de Supabase tiene que incluir `{{ .Token }}`
-   (ver `SMTP.md`), si no al cliente le llega un link en vez del código.
-5. **Primer ingreso al mostrador.** El dueño entra a `/admin` con su email.
-   Como está en `ZORVO_OWNER_EMAILS`, queda como dueño. Desde **Equipo** suma
-   a los baristas por email.
+### 1. Base de datos — hecho
+
+El proyecto de Supabase **ZORVO** (`ublhidktrzaveaiyyycf`) ya tiene las 9
+migraciones de `supabase/migrations`, el seed (local y carta) y pasó la
+verificación de la tarjeta (21/21) y el Security Advisor (queda solo el aviso
+de `citext` en public, a propósito). El historial de migraciones coincide con
+el repo, así que de acá en adelante alcanza con `npx supabase db push`.
+
+Para cambiar el nombre del local, la carta o los precios: Table Editor →
+`locations` / `products`. Un producto con `counts_for_collection = false` no suma Z.
+
+### 2. Mail con el código
+
+En el dashboard de Supabase (desde Vercel: Storage → el proyecto → Open in Supabase):
+
+1. **Plantillas.** Authentication → Emails → Templates. En **Confirm signup** y
+   en **Magic Link**: asunto `Tu código para entrar a ZORVO` y como cuerpo el
+   contenido de `supabase/templates/codigo.html`. Tienen que ser las dos: el
+   primer ingreso de un cliente usa Confirm signup, los siguientes Magic Link.
+2. **SMTP propio.** Authentication → Emails → SMTP Settings. Sin esto, el mail
+   de Supabase solo les llega a los miembros del equipo de Supabase, no a los
+   clientes. Lo recomendable es Resend con un dominio de ZORVO
+   (host `smtp.resend.com`, puerto `465`, usuario `resend`, contraseña = API key,
+   remitente `club@<dominio>`, nombre `ZORVO`). Como paso intermedio sirve
+   Gmail con contraseña de aplicación (ver `SMTP.md`).
+3. **Límite de envíos.** Authentication → Rate Limits → mails por hora: subilo
+   (por ejemplo a 200). Cada ingreso de un cliente es un mail.
+4. **URLs.** Authentication → URL Configuration → Site URL: la URL de
+   producción. Redirect URLs: la misma con `/**` al final.
+
+### 3. Variables en Vercel
+
+Settings → Environment Variables (Production y Preview). Si el proyecto de
+Supabase está conectado al de Vercel (pestaña Storage), estas ya vienen solas:
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY`. Revisá que la URL sea la de **ZORVO**
+(`https://ublhidktrzaveaiyyycf.supabase.co`) y no la del proyecto viejo pausado.
+
+Hay que sumar dos:
+
+| Variable | Valor |
+|---|---|
+| `CREDENTIAL_HMAC_MASTER` | el resultado de `openssl rand -base64 48` en la terminal |
+| `ZORVO_OWNER_EMAILS` | los emails que entran como dueños a `/admin`, separados por coma |
+
+Después: Deployments → el último → Redeploy (las variables nuevas no se
+aplican a un deploy que ya existe).
+
+### 4. Primer ingreso al mostrador
+
+El dueño entra a `/admin` con su email. Como está en `ZORVO_OWNER_EMAILS`,
+queda como dueño. Desde **Equipo** suma a los baristas por email.
 
 ## Apple Wallet
 

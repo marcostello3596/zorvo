@@ -41,11 +41,11 @@ Save.
 
 Este es el paso que rompe el circuito si se saltea.
 
-Authentication → Emails → plantilla **Magic Link**.
+Authentication → Emails → plantillas **Confirm signup** y **Magic Link** (las dos).
 
-Supabase usa esa misma plantilla para el OTP. Si solo tiene `{{ .ConfirmationURL }}`, al socio le llega un link y no el código de seis dígitos que le pide nuestra pantalla.
+El primer ingreso de un cliente nuevo usa Confirm signup; los siguientes, Magic Link. Si alguna solo tiene `{{ .ConfirmationURL }}`, al socio le llega un link y no el código de seis dígitos que le pide nuestra pantalla.
 
-Reemplazá el cuerpo por algo así:
+La versión con la marca está lista en `supabase/templates/codigo.html`: pegala en las dos. Una mínima sería:
 
 ```html
 <h2>Tu código de Zorvo</h2>
