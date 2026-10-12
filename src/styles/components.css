@@ -1,0 +1,319 @@
+/* ================= botones ================= */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px 0 12px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: scale .25s var(--ease-back);
+}
+.pill:active { scale: .95; }
+.pill--ink { background: var(--ink); color: var(--paper); }
+.pill__z { width: 20px; color: var(--yellow); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 0 26px;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: translate .15s ease, box-shadow .15s ease;
+  user-select: none;
+}
+.btn:active { translate: 4px 4px; box-shadow: 0 0 0 var(--ink); }
+.btn--ink { background: var(--ink); color: var(--paper); box-shadow: 4px 4px 0 var(--yellow); border-color: var(--ink); }
+.btn--ink:active { box-shadow: 0 0 0 var(--yellow); }
+.btn--yellow { background: var(--yellow); }
+.btn--block { width: 100%; }
+.btn__ico { width: 24px; }
+.btn .label { font-size: 10px; opacity: .7; }
+
+/* Botón Wallet: negro, sobrio, como pide la guía de Apple (sin su logo) */
+.btn-wallet {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 58px;
+  padding: 0 22px 0 16px;
+  border-radius: 14px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--font-body);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .14) inset, 0 14px 26px -16px rgba(0, 0, 0, .7);
+  transition: scale .2s var(--ease-back);
+}
+.btn-wallet:active { scale: .96; }
+.btn-wallet__icon { width: 30px; flex: none; }
+.btn-wallet__icon svg { stroke-width: 1.6; }
+.btn-wallet__txt { display: grid; font-size: 19px; font-weight: 600; line-height: 1.02; letter-spacing: -0.01em; text-align: left; }
+.btn-wallet__txt small { font-size: 12px; font-weight: 500; opacity: .8; letter-spacing: 0; }
+.btn-wallet--block { width: 100%; justify-content: center; }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  background-image: linear-gradient(var(--yellow), var(--yellow));
+  background-size: 100% 0.42em;
+  background-position: 0 88%;
+  background-repeat: no-repeat;
+  transition: background-size .3s var(--ease-out);
+}
+.link-arrow:hover { background-size: 100% 0.9em; }
+.link-arrow span { transition: transform .3s var(--ease-back); }
+.link-arrow:hover span { transform: translateX(4px); }
+.link-arrow--sm { font-size: 15px; }
+
+.demo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 2px dashed var(--ink-soft);
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: left;
+  line-height: 1.3;
+  transition: background .2s, border-color .2s;
+}
+.demo-chip:hover { background: rgba(255, 199, 68, .25); border-color: var(--ink); }
+.demo-chip:active { scale: .98; }
+.demo-chip--block { width: 100%; justify-content: center; }
+.demo-chip__tag {
+  flex: none;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--yellow);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* ================= Z inline / doodles / badge ================= */
+.zinline { width: 1.05em; vertical-align: -0.12em; color: var(--bordo); }
+.doodle { position: absolute; color: var(--ink); pointer-events: none; }
+.doodle--sparkle { color: var(--yellow); }
+
+.badge { width: 100%; height: auto; overflow: visible; }
+.badge__bg { fill: var(--card); stroke: var(--ink); stroke-width: 2.5; }
+.badge__txt {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 17.5px;
+  letter-spacing: 1px;
+  fill: var(--ink);
+}
+.badge__spin { transform-origin: 100px 100px; animation: spin 18s linear infinite; }
+.badge__dot { fill: var(--bordo); }
+.badge__z { fill: var(--yellow); }
+.badge--dark .badge__bg { fill: var(--yellow); stroke: none; }
+.badge--dark .badge__txt { fill: var(--bordo); }
+.badge--dark .badge__dot { fill: var(--bordo); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ================= Z de la tarjeta ================= */
+.zslot { display: block; position: relative; line-height: 0; }
+.zslot__svg { width: 100%; height: auto; overflow: visible; }
+.z-out { fill: none; stroke: var(--bordo); stroke-width: 4.5; stroke-linejoin: round; opacity: .85; }
+.z-fill { fill: var(--bordo); opacity: 0; filter: url(#z-ink); }
+.zslot.is-on .z-out { opacity: 0.25; }
+.zslot.is-on .z-fill { opacity: 1; }
+
+/* ================= tarjeta de fidelidad ================= */
+.loyalty { position: relative; width: 100%; max-width: 460px; margin-inline: auto; perspective: 1300px; touch-action: pan-y; }
+.loyalty__tilt { position: relative; transform-style: preserve-3d; }
+.loyalty__inner { position: relative; aspect-ratio: 1.586; transform-style: preserve-3d; }
+.loyalty__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.loyalty__front {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  padding: 4.2% 5% 3.6%;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255, 255, 255, .9), transparent 55%),
+    var(--card);
+  color: var(--bordo);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .9) inset,
+    0 0 0 1px rgba(22, 21, 19, .06),
+    0 30px 50px -30px rgba(22, 21, 19, .55),
+    0 3px 8px rgba(22, 21, 19, .12);
+}
+.loyalty__front::after {
+  /* textura de cartulina */
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: .5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .42 0 0 0 0 .38 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+.loyalty__top { display: flex; align-items: center; justify-content: space-between; }
+.loyalty__logo { width: 27%; line-height: 0; color: var(--bordo); }
+.loyalty__no { font-family: var(--font-mono); font-size: clamp(9px, 2.5vw, 11px); font-weight: 600; letter-spacing: .1em; }
+.loyalty__msg {
+  margin-top: 3.5%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 87%;
+  font-size: clamp(13px, 3.9vw, 18px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.loyalty__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6% 5.5%;
+  align-content: center;
+  padding: 2% 1.5% 0;
+}
+.loyalty__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px;
+  font-size: clamp(8.5px, 2.4vw, 11px);
+  line-height: 1.2;
+  color: var(--bordo);
+}
+.loyalty__foot span { opacity: .8; }
+.loyalty__count {
+  display: inline-flex;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 62%;
+  font-size: clamp(18px, 5.4vw, 26px);
+  line-height: .9;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+}
+.loyalty__count span { display: inline-block; }
+.loyalty__shine {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 50% at var(--sx, 30%) var(--sy, 20%), rgba(255, 255, 255, .5), transparent 70%);
+  mix-blend-mode: soft-light;
+}
+.loyalty__back {
+  transform: rotateY(180deg);
+  display: grid;
+  grid-template-columns: 38% 1fr;
+  align-items: center;
+  gap: 4%;
+  padding: 6%;
+  background: var(--bordo);
+  color: var(--yellow);
+  box-shadow: 0 30px 50px -30px rgba(22, 21, 19, .55);
+}
+.loyalty__back-mascot { width: 100%; }
+.loyalty__back-k { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+.loyalty__back-title {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 125%;
+  font-size: clamp(24px, 7.4vw, 36px);
+  line-height: .92;
+  text-transform: uppercase;
+}
+.loyalty__back-s { margin-top: 8px; font-size: clamp(12px, 3.4vw, 15px); color: var(--paper); }
+.splat { position: absolute; z-index: 3; border-radius: 50%; background: var(--bordo); pointer-events: none; }
+
+/* vaso que vuela al sellar */
+.fly-cup { position: fixed; left: 0; top: 0; z-index: 120; width: 58px; color: var(--ink); pointer-events: none; }
+
+/* ================= pase Apple Wallet ================= */
+.pass {
+  --pass-pad: 16px;
+  width: 100%;
+  max-width: 360px;
+  margin-inline: auto;
+  border-radius: 14px;
+  background: var(--bordo);
+  color: var(--paper);
+  overflow: hidden;
+  box-shadow: 0 24px 40px -24px rgba(22, 21, 19, .6), 0 2px 6px rgba(22, 21, 19, .15);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", var(--font-body);
+}
+.pass__top { display: flex; align-items: center; justify-content: space-between; padding: 14px var(--pass-pad) 10px; }
+.pass__logo { width: 34%; color: var(--yellow); line-height: 0; }
+.pass__field { display: grid; gap: 1px; min-width: 0; }
+.pass__field--r { text-align: right; }
+.pass__k { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--yellow); }
+.pass__v { font-size: 18px; font-weight: 500; line-height: 1.15; }
+.pass__strip { background: var(--card); padding: 14px 18px; }
+.pass__grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px 14px; }
+.pass__fields { display: flex; justify-content: space-between; gap: 12px; padding: 12px var(--pass-pad); }
+.pass__barcode { display: grid; justify-items: center; gap: 6px; padding: 6px var(--pass-pad) 18px; }
+.pass__qr { width: 46%; max-width: 150px; background: #fff; border-radius: 8px; padding: 6px; line-height: 0; }
+.pass__code { font-size: 11px; letter-spacing: .04em; opacity: .85; }
+.pass--compact { --pass-pad: 12px; border-radius: 12px; }
+.pass--compact .pass__top { padding-top: 10px; padding-bottom: 8px; }
+.pass--compact .pass__v { font-size: 14px; }
+.pass--compact .pass__k { font-size: 8px; }
+.pass--compact .pass__strip { padding: 10px 12px; }
+.pass--compact .pass__grid { gap: 5px 9px; }
+.pass--compact .pass__fields { padding-block: 8px; }
+.pass--compact .pass__barcode { padding-bottom: 12px; }
+.pass--compact .pass__code { font-size: 8px; }
+
+/* ================= toast / confetti ================= */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--safe-b) + 104px);
+  z-index: 130;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 13px 18px;
+  border-radius: 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  box-shadow: 0 16px 30px -14px rgba(0, 0, 0, .6);
+  transform: translateX(-50%);
+}
+.confetti { position: fixed; inset: 0; z-index: 125; pointer-events: none; overflow: hidden; }
+.confetti__z { position: absolute; line-height: 0; }

@@ -1,55 +1,17 @@
-# ═══════════════════════════════════════════════════════════════════════════
-# Lo más importante de este archivo son las tres líneas de .env.local.
-#
-# SUPABASE_SERVICE_ROLE_KEY ignora RLS por completo: quien la tenga lee,
-# escribe y borra toda la base, incluidos los datos personales de los
-# clientes. Si llega a un repositorio —aunque sea privado— hay que rotarla
-# en el dashboard, no alcanza con borrar el commit: queda en el historial.
-# ═══════════════════════════════════════════════════════════════════════════
-
-# Variables de entorno — NUNCA
-.env
-.env.local
-.env*.local
-.env.production
-
-# .env.example SÍ va: no tiene valores, solo los nombres.
-!.env.example
-
-# Dependencias
+# dependencias
 node_modules/
-.pnp
-.pnp.js
 
-# Next
-.next/
-out/
-build/
-next-env.d.ts
+# builds (se regeneran con npm run build / build:artifact)
+dist/
+dist-artifact/
+artifact/
 
-# Vercel
-.vercel
-
-# Supabase local
-supabase/.branches
-supabase/.temp
-supabase/.env
-
-# TypeScript
-*.tsbuildinfo
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Sistema
+# sistema / editor
 .DS_Store
-Thumbs.db
-*.pem
-
-# Editores
-.idea/
+*.log
+.env
+.env.*
+!.env.example
 .vscode/*
 !.vscode/extensions.json
+.idea/
