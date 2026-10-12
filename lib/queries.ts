@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
@@ -42,7 +44,7 @@ export type CafeCarta = {
 };
 
 /** El socio de la sesión actual. null si no hay sesión o no tiene membresía. */
-export async function getSocio(): Promise<SocioResumen | null> {
+export const getSocio = cache(async function getSocio(): Promise<SocioResumen | null> {
   const supabase = await createSupabaseServerClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -69,7 +71,7 @@ export async function getSocio(): Promise<SocioResumen | null> {
     }),
     lifetimePoints: data.lifetime_points,
   };
-}
+});
 
 /** Los recorridos activos con el progreso del socio. */
 export async function getRecorridos(memberId: string): Promise<ProgresoRecorrido[]> {
@@ -79,6 +81,7 @@ export async function getRecorridos(memberId: string): Promise<ProgresoRecorrido
     .from("challenges")
     .select("id, slug, name, description, sort_order, rewards(name)")
     .eq("active", true)
+    .neq("kind", "PUNCH") // la tarjeta de la Z se muestra aparte
     .order("sort_order");
 
   if (!challenges?.length) return [];
@@ -212,4 +215,111 @@ export async function getLoDeSiempre(memberId: string): Promise<string | null> {
   }
   // Con un solo consumo no hay "siempre". Dos es el mínimo para un hábito.
   return max >= 2 ? mejor : null;
+}
+
+
+// ───────────────────────────────────────────────────────────────────────────
+// Tarjeta de la Z (desafío PUNCH) y premios
+// ───────────────────────────────────────────────────────────────────────────
+
+export type Tarjeta = {
+  /** Z en la tarjeta actual (0..target-1) */
+  z: number;
+  target: number;
+  /** tarjetas completas en la vida del socio */
+  tarjetas: number;
+  /** Z totales en la vida del socio */
+  total: number;
+};
+
+export type Premio = { id: string; nombre: string; desde: string };
+
+export const getTarjeta = cache(async function getTarjeta(memberId: string): Promise<Tarjeta> {
+  const supabase = await createSupabaseServerClient();
+  const { data: ch } = await supabase
+    .from("challenges")
+    .select("id, config")
+    .eq("kind", "PUNCH")
+    .eq("active", true)
+    .order("sort_order")
+    .limit(1)
+    .maybeSingle();
+
+  const target = Number((ch?.config as { target?: number } | null)?.target ?? 10);
+  if (!ch) return { z: 0, target, tarjetas: 0, total: 0 };
+
+  const { data: p } = await supabase
+    .from("challenge_progress")
+    .select("progress_num, progress_den, state")
+    .eq("member_id", memberId)
+    .eq("challenge_id", ch.id)
+    .maybeSingle();
+
+  const state = (p?.state ?? {}) as { total?: number; cards?: number };
+  return {
+    z: p?.progress_num ?? 0,
+    target: p?.progress_den || target,
+    tarjetas: state.cards ?? 0,
+    total: state.total ?? 0,
+  };
+});
+
+/** Premios desbloqueados y todavía no entregados (cafés de regalo, gorra…). */
+export async function getPremiosPendientes(memberId: string): Promise<Premio[]> {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("reward_grants")
+    .select("id, granted_at, rewards(name)")
+    .eq("member_id", memberId)
+    .eq("status", "unlocked")
+    .order("granted_at");
+  return (data ?? []).map((g) => {
+    const r = Array.isArray(g.rewards) ? g.rewards[0] : g.rewards;
+    return { id: g.id, nombre: r?.name ?? "Premio", desde: g.granted_at };
+  });
+}
+
+export type Movimiento =
+  | { tipo: "cafe"; id: string; fecha: string; producto: string; cantidad: number; anulado: boolean; sumaZ: boolean }
+  | { tipo: "premio"; id: string; fecha: string; producto: string };
+
+/** Cafés y premios canjeados, del más nuevo al más viejo. */
+export async function getHistorial(memberId: string, limite = 60): Promise<Movimiento[]> {
+  const supabase = await createSupabaseServerClient();
+  const [{ data: cafes }, { data: premios }] = await Promise.all([
+    supabase
+      .from("consumptions")
+      .select("id, occurred_at, quantity, voided_at, products(name, counts_for_collection)")
+      .eq("member_id", memberId)
+      .order("occurred_at", { ascending: false })
+      .limit(limite),
+    supabase
+      .from("reward_grants")
+      .select("id, delivered_at, rewards(name)")
+      .eq("member_id", memberId)
+      .eq("status", "delivered")
+      .order("delivered_at", { ascending: false })
+      .limit(limite),
+  ]);
+
+  const lista: Movimiento[] = [
+    ...(cafes ?? []).map((c) => {
+      const p = Array.isArray(c.products) ? c.products[0] : c.products;
+      return {
+        tipo: "cafe" as const,
+        id: c.id,
+        fecha: c.occurred_at,
+        producto: p?.name ?? "Café",
+        cantidad: c.quantity ?? 1,
+        anulado: !!c.voided_at,
+        // misma regla que el motor (resolve_product_set sin filtro): suma si es café de la carta
+        sumaZ: !!p?.counts_for_collection,
+      };
+    }),
+    ...(premios ?? []).map((g) => {
+      const r = Array.isArray(g.rewards) ? g.rewards[0] : g.rewards;
+      return { tipo: "premio" as const, id: g.id, fecha: g.delivered_at ?? "", producto: r?.name ?? "Premio" };
+    }),
+  ];
+  return lista.sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, limite);
 }

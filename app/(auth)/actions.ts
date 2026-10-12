@@ -32,6 +32,12 @@ const codigoSchema = z
 
 export type EstadoAuth = { error?: string };
 
+/** Solo rutas internas: evita que ?next= mande al socio a otro sitio. */
+function destinoSeguro(valor: FormDataEntryValue | null, porDefecto = "/club"): string {
+  const v = typeof valor === "string" ? valor : "";
+  return v.startsWith("/") && !v.startsWith("//") ? v : porDefecto;
+}
+
 /** Alta de socio nuevo. Crea el usuario si no existe. */
 export async function altaSocio(
   _prev: EstadoAuth,
@@ -69,15 +75,22 @@ export async function ingresar(
   if (!email.success) return { error: email.error.issues[0]?.message };
 
   const supabase = await createSupabaseServerClient();
+  const next = destinoSeguro(formData.get("next"));
+
+  // El primer dueño (ZORVO_OWNER_EMAILS) puede entrar directo a /admin sin
+  // haberse dado de alta antes como socio. Para el resto, ingresar no crea
+  // cuentas: eso es /join, o Equipo para el personal.
+  const duenos = (process.env.ZORVO_OWNER_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+  const esDueno = next.startsWith("/admin") && duenos.includes(email.data);
 
   const { error } = await supabase.auth.signInWithOtp({
     email: email.data,
-    options: { shouldCreateUser: false },
+    options: { shouldCreateUser: esDueno },
   });
 
   if (error) return { error: traducir(error.message) };
 
-  redirect(`/verificar?email=${encodeURIComponent(email.data)}`);
+  redirect(`/verificar?email=${encodeURIComponent(email.data)}&next=${encodeURIComponent(next)}`);
 }
 
 /** Verificación del código. Es lo que crea la sesión. */
@@ -107,7 +120,7 @@ export async function verificar(
       type,
     });
 
-    if (!error) redirect("/club");
+    if (!error) redirect(destinoSeguro(formData.get("next")));
     ultimoError = error.message;
   }
 

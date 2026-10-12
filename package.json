@@ -16,26 +16,29 @@
     "db:types": "supabase gen types typescript --local --schema public > types/database.types.ts",
     "db:types:remote": "supabase gen types typescript --linked --schema public > types/database.types.ts",
     "db:diff": "supabase db diff -f",
-    "verify": "npm run typecheck && npm run lint && npm run build"
+    "verify": "npm run typecheck && npm run lint && npm run build",
+    "db:verify": "echo \"Pegá supabase/tests/verificacion.sql y supabase/tests/tarjeta_verificacion.sql en el SQL Editor\""
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.58.0",
     "next": "^16.3.0",
-    "qrcode": "^1.5.4",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "server-only": "^0.0.1",
-    "zod": "^4.1.0"
+    "zod": "^4.1.0",
+    "gsap": "3.13.0",
+    "three": "0.170.0",
+    "lenis": "1.1.20",
+    "qrcode-generator": "1.4.4",
+    "qr-scanner": "1.4.2"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.13",
     "@types/node": "^22",
-    "@types/qrcode": "^1.5.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "supabase": "^2.40.0",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "@types/three": "0.170.0"
   }
 }

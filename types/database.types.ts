@@ -833,6 +833,21 @@ export type Database = {
       }
     }
     Functions: {
+      zorvo_redeem_grant: {
+        Args: { p_grant_id: string; p_staff_id: string }
+        Returns: Json
+      }
+      zorvo_register_visit: {
+        Args: {
+          p_member_id: string
+          p_staff_id: string
+          p_location_id: string
+          p_kind: Database["public"]["Enums"]["credential_kind"] | null
+          p_token_step: number | null
+          p_items: Json
+        }
+        Returns: Json
+      }
       zorvo_verificar: {
         Args: never
         Returns: {
@@ -847,7 +862,7 @@ export type Database = {
     Enums: {
       app_role: "customer" | "barista" | "manager" | "owner"
       challenge_cycle: "none" | "weekly" | "monthly"
-      challenge_kind: "COLLECTION" | "COUNT" | "STREAK" | "VISIT" | "MANUAL"
+      challenge_kind: "COLLECTION" | "COUNT" | "STREAK" | "VISIT" | "MANUAL" | "PUNCH"
       consumption_src: "scan" | "manual" | "import" | "order"
       credential_kind: "rotating" | "wallet_static"
       grant_status:
@@ -993,7 +1008,7 @@ export const Constants = {
     Enums: {
       app_role: ["customer", "barista", "manager", "owner"],
       challenge_cycle: ["none", "weekly", "monthly"],
-      challenge_kind: ["COLLECTION", "COUNT", "STREAK", "VISIT", "MANUAL"],
+      challenge_kind: ["COLLECTION", "COUNT", "STREAK", "VISIT", "MANUAL", "PUNCH"],
       consumption_src: ["scan", "manual", "import", "order"],
       credential_kind: ["rotating", "wallet_static"],
       grant_status: ["unlocked", "reserved", "delivered", "expired", "revoked"],

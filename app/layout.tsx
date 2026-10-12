@@ -1,86 +1,70 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Sofia_Sans_Extra_Condensed,
-  Hanken_Grotesk,
-  Martian_Mono,
-} from "next/font/google";
-import "./globals.css";
+import { Archivo, Caveat_Brush, JetBrains_Mono } from "next/font/google";
+
+import { Chrome } from "@/components/chrome/Chrome";
+import { SvgDefs } from "@/components/chrome/SvgDefs";
+
+import "@/styles/tokens.css";
+import "@/styles/base.css";
+import "@/styles/components.css";
+import "@/styles/landing.css";
+import "@/styles/app.css";
+import "@/styles/club.css";
+import "@/styles/admin.css";
 
 /**
- * Tipografía — ver ZORVO_01 §3.
- * Sofia Sans Extra Condensed es fuente REAL de marca (aparece en el PDF) y
- * además es OFL, así que se sirve idéntica al original.
- * Hanken Grotesk y Martian Mono son los sustitutos libres acordados para
- * RealText Pro e Input Mono Compressed, que son comerciales.
+ * Tipografía: Archivo variable usando su eje de ancho (62% condensado para
+ * titulares, 125% expandido para stickers), JetBrains Mono para etiquetas y
+ * Caveat Brush para anotaciones a mano. next/font las sirve desde el propio
+ * dominio, sin pedirle nada a Google en cada visita.
  */
-const sofia = Sofia_Sans_Extra_Condensed({
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["400", "600", "800"],
-  variable: "--font-sofia",
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
-
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-hanken",
-  display: "swap",
-});
-
-const martian = Martian_Mono({
+const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
-  variable: "--font-martian",
+  variable: "--font-jetbrains",
+  display: "swap",
+});
+const caveat = Caveat_Brush({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-caveat",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Zorvo — Cool Brew Coffee",
+  title: "ZORVO Cool Brew Coffee",
   description:
-    "Café al paso, bien hecho. Sumate al Club de Zorvo: tomás café, nosotros nos acordamos, y un día te llevás una gorra.",
+    "Café al paso, bien hecho. Sumate al Club de la Z: cada café es una Z y a la décima invitamos nosotros.",
   openGraph: {
-    title: "Zorvo — Cool Brew Coffee",
+    title: "ZORVO Cool Brew Coffee",
     description: "Aunque el momento sea corto, merece ser bueno. Muy bueno.",
     locale: "es_AR",
     type: "website",
   },
 };
 
-/**
- * A diferencia de la referencia, NO bloqueamos el zoom.
- * user-scalable=no rompe WCAG 1.4.4 y contradice el enfoque mobile-first.
- */
+// Sin bloquear el zoom: user-scalable=no rompe WCAG 1.4.4.
 export const viewport: Viewport = {
-  themeColor: "#76262F",
+  themeColor: "#F3F5EE",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="es-AR"
-      className={`${sofia.variable} ${hanken.variable} ${martian.variable}`}
-    >
-      {/*
-        Varias extensiones de navegador (ColorZilla, Grammarly, gestores de
-        contraseñas) escriben atributos en el <body> antes de que React
-        hidrate, y eso dispara una advertencia de hidratación que no viene de
-        nuestro código y que no podemos evitar.
-
-        suppressHydrationWarning solo silencia UN nivel: los atributos de este
-        elemento. Cualquier desajuste real dentro del árbol se sigue
-        reportando, que es lo que nos importa.
-      */}
+    <html lang="es-AR" className={`${archivo.variable} ${jetbrains.variable} ${caveat.variable}`}>
+      {/* suppressHydrationWarning: extensiones del navegador escriben atributos en <body> antes de hidratar */}
       <body suppressHydrationWarning>
-        <a
-          href="#contenido"
-          className="zrv-label sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-venus focus:px-4 focus:py-3 focus:text-espresso-deep"
-        >
-          Saltar al contenido
-        </a>
-        {children}
+        <SvgDefs />
+        <div className="grain" aria-hidden="true" />
+        <Chrome>{children}</Chrome>
       </body>
     </html>
   );
