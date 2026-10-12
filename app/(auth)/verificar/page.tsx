@@ -40,7 +40,7 @@ function Formulario() {
           aria-invalid={estado.error ? true : undefined}
           // El tracking es menor que el de un campo de 6 fijo: con 8 o 10
           // dígitos, 0.4em desbordaba en pantallas angostas.
-          className="zrv-data h-16 w-full rounded-[2px] border-2 border-[var(--zrv-espresso-500)] bg-[var(--zrv-espresso-800)] px-4 text-center text-3xl tracking-[0.2em] text-cream placeholder:text-[var(--zrv-espresso-500)] focus:border-venus focus:outline-none"
+          className="zrv-data h-16 w-full rounded-[2px] border-2 border-[var(--zrv-espresso-500)] bg-[var(--zrv-espresso-800)] px-4 text-center text-3xl tracking-[0.2em] text-cream placeholder:text-[var(--zrv-espresso-300)] focus:border-venus focus:outline-none"
         />
       </div>
 

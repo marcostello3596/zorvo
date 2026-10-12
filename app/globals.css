@@ -142,3 +142,179 @@
 @media (prefers-reduced-motion: reduce) {
   .zrv-marquee-track { animation: none; }
 }
+
+.zrv-marquee-track--reverse { animation-direction: reverse; }
+
+/* ============================================================================
+   MOVIMIENTO NARRATIVO — "el café llena la página"
+
+   Concepto: Zorvo viene de dar un sorbo. Mientras se baja, las ilustraciones
+   se llenan como un vaso que se sirve, las trece casillas del recorrido se
+   completan y el vaso de la esquina sube de nivel. El scroll es la historia.
+
+   Dos implementaciones del mismo efecto:
+   1. animation-timeline: view() / scroll() — nativo, ligado al scroll, fuera
+      del hilo principal. Chromium y Safari 26.
+   2. IntersectionObserver + transition — Firefox, que lo tiene detrás de un
+      flag. Pierde el ligado continuo; gana un revelado de una pasada.
+      Lo maneja components/motion/ObservadorMovimiento.tsx.
+
+   prefers-reduced-motion: todo queda en su estado FINAL, no a medio camino.
+   ============================================================================ */
+
+/* Registrar las propiedades es lo que permite animarlas: sin @property el
+   navegador las trata como texto y salta de un valor al otro. */
+@property --llenado { syntax: "<percentage>"; inherits: true; initial-value: 100%; }
+@property --menisco { syntax: "<number>";     inherits: true; initial-value: 0; }
+
+@keyframes zrv-llenar {
+  0%   { --llenado: 100%; --menisco: 0; }
+  12%  { --menisco: 1; }
+  88%  { --menisco: 1; }
+  100% { --llenado: 0%;   --menisco: 0; }
+}
+@keyframes zrv-subir {
+  from { opacity: 0; transform: translateY(2.5rem); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes zrv-asomar {
+  from { clip-path: inset(100% 0 0 0); transform: translateY(12%); }
+  to   { clip-path: inset(0 0 0 0);    transform: none; }
+}
+@keyframes zrv-casilla {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* La capa de café de una ilustración: se recorta desde arriba. */
+.zrv-llenado { clip-path: inset(var(--llenado) 0 0 0); }
+
+/* La línea de nivel: el borde del líquido mientras sube. Desaparece al
+   llegar arriba, para que en reposo no quede una raya suelta. */
+.zrv-menisco {
+  position: absolute; left: -6%; right: -6%; height: 2px;
+  top: var(--llenado);
+  background: currentColor;
+  opacity: calc(var(--menisco) * 0.55);
+  pointer-events: none;
+}
+
+/* Casillas del recorrido: el relleno crece desde abajo, como el líquido. */
+.zrv-casilla > .zrv-casilla-relleno { display: flex; align-items: center; justify-content: center; position: absolute; inset: 0; transform-origin: bottom; transform: scaleY(0); }
+
+/* ── Al cargar (independiente del scroll, para lo que ya está a la vista) ── */
+.zrv-carga-llenar  { animation: zrv-llenar 1.9s var(--ease-out) 0.35s both; }
+.zrv-carga-asomar  { animation: zrv-asomar 1.1s var(--ease-out) 0.05s both; }
+.zrv-carga-subir   { animation: zrv-subir 0.9s var(--ease-out) var(--retraso, 0.15s) both; }
+.zrv-carga-casillas .zrv-casilla > .zrv-casilla-relleno {
+  animation: zrv-casilla 0.5s var(--ease-out) both;
+  animation-delay: calc(0.6s + var(--i) * 110ms);
+}
+
+/* ── Camino nativo ───────────────────────────────────────────────────────── */
+@supports (animation-timeline: view()) {
+  .zrv-anim-llenar {
+    animation: zrv-llenar linear both;
+    animation-timeline: view();
+    /* Empieza cuando entra y termina a media pantalla: el llenado ocurre
+       mientras se mira, no antes ni después. */
+    animation-range: entry 10% cover 52%;
+  }
+  .zrv-anim-subir {
+    animation: zrv-subir linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 80%;
+  }
+  .zrv-anim-casillas { view-timeline-name: --casillas; }
+  .zrv-anim-casillas .zrv-casilla > .zrv-casilla-relleno {
+    animation: zrv-casilla linear both;
+    animation-timeline: --casillas;
+    /* Una por una: cada casilla ocupa una franja del recorrido. */
+    animation-range:
+      cover calc(18% + var(--i) * 2.6%)
+      cover calc(22% + var(--i) * 2.6%);
+  }
+  /* El vaso de la esquina: sube de nivel con toda la página. */
+  .zrv-vaso { animation: zrv-llenar linear both; animation-timeline: scroll(root); }
+}
+
+/* La persona del hero no se queda quieta: sigue su camino hacia la derecha
+   mientras se baja, y reaparece en el paso 01 del Club. Ligado al scroll de
+   la página, en los primeros 70% de pantalla. */
+@keyframes zrv-seguir { to { transform: translateX(60vw); } }
+@supports (animation-timeline: scroll()) {
+  .zrv-anim-seguir {
+    animation: zrv-seguir linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 70vh;
+  }
+}
+
+/* ── Fallback ──────────────────────────────────────────────────────────────
+   Todo prefijado con html.zrv-mov, una clase que agrega el script recién
+   cuando arranca. Si el JavaScript no llega (falla de red, bloqueador), la
+   clase no existe y el contenido se ve completo y quieto. El texto nunca
+   puede depender de un script para ser visible. */
+@supports not (animation-timeline: view()) {
+  html.zrv-mov .zrv-anim-llenar { --llenado: 100%; transition: --llenado 1.5s var(--ease-out); }
+  html.zrv-mov .zrv-anim-llenar.zrv-visible { --llenado: 0%; }
+
+  html.zrv-mov .zrv-anim-subir {
+    opacity: 0; transform: translateY(2.5rem);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+  html.zrv-mov .zrv-anim-subir.zrv-visible { opacity: 1; transform: none; }
+
+  html.zrv-mov .zrv-anim-casillas .zrv-casilla > .zrv-casilla-relleno {
+    transition: transform 0.45s var(--ease-out);
+    transition-delay: calc(var(--i) * 90ms);
+  }
+  html.zrv-mov .zrv-anim-casillas.zrv-visible .zrv-casilla > .zrv-casilla-relleno { transform: none; }
+
+  /* Sin timeline de scroll, el vaso no tiene cómo saber el nivel. */
+  .zrv-vaso-chip { display: none !important; }
+}
+
+/* Sin la clase del script y sin soporte nativo: estado final, sin animar. */
+@supports not (animation-timeline: view()) {
+  html:not(.zrv-mov) .zrv-anim-llenar { --llenado: 0%; }
+  html:not(.zrv-mov) .zrv-casilla > .zrv-casilla-relleno { transform: none; }
+}
+
+/* Tipografía calada: solo para texto decorativo (aria-hidden). Sin relleno
+   no tiene contraste suficiente para leerse como contenido. */
+.zrv-calado { color: transparent; -webkit-text-stroke: 1.5px var(--zrv-espresso-700); }
+
+/* ── Respeto absoluto por prefers-reduced-motion ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .zrv-anim-llenar, .zrv-carga-llenar,
+  .zrv-anim-subir, .zrv-carga-subir,
+  .zrv-carga-asomar {
+    animation: none !important; transition: none !important;
+    opacity: 1 !important; transform: none !important; clip-path: none !important;
+    --llenado: 0% !important; --menisco: 0 !important;
+  }
+  .zrv-anim-seguir { animation: none !important; }
+  .zrv-casilla > .zrv-casilla-relleno { animation: none !important; transition: none !important; transform: none !important; }
+  /* El vaso solo tiene sentido en movimiento: quieto lleno no dice nada. */
+  .zrv-vaso-chip { display: none !important; }
+}
+
+/* Lista tipográfica de la carta: la fila se llena de café al pasar el
+   puntero. Solo en dispositivos con hover real, para no dejar filas
+   "pegadas" en pantallas táctiles. */
+@media (hover: hover) and (pointer: fine) {
+  .zrv-fila { position: relative; isolation: isolate; }
+  .zrv-fila::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: var(--zrv-espresso-700);
+    transform: scaleY(0); transform-origin: bottom;
+    transition: transform 0.45s var(--ease-out);
+  }
+  .zrv-fila:hover::before { transform: scaleY(1); }
+  .zrv-fila:hover { color: var(--zrv-cream); }
+  .zrv-fila:hover .zrv-fila-acento { color: var(--zrv-yellow-400); }
+  .zrv-fila .zrv-fila-vaso { opacity: 0; transform: translateX(-0.75rem); transition: opacity .35s var(--ease-out), transform .45s var(--ease-out); }
+  .zrv-fila:hover .zrv-fila-vaso { opacity: 1; transform: none; }
+}

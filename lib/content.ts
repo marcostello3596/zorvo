@@ -144,3 +144,64 @@ export const SOCIO_DEMO = {
   visitasMes: 12,
   loDeSiempre: "Cold Brew, 300ml",
 };
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NARRATIVA DE LA LANDING
+   La página cuenta una sola cosa: la ciudad corre, Zorvo es la pausa.
+   El orden de los actos sigue el storytelling del PDF de marca.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+export const HERO = {
+  titulo: ["Los momentos", "más breves", "merecen estar", "bien hechos."],
+  bajada: "Café al paso en Palermo. Rápido no significa conformarse.",
+  lugar: "Palermo, Buenos Aires",
+};
+
+/** Acto I — la ciudad. Los verbos corren como corre la gente. */
+export const CIUDAD = {
+  marca: "La ciudad",
+  titulo: "La ciudad no frena.",
+  verbos: ["Va", "Viene", "Corre", "Llega tarde", "Sale antes", "Cambia de plan"],
+  texto:
+    "Y en el medio de todo eso existen momentos chiquitos que hacen que el día se sienta distinto. Un café antes de arrancar. Una pausa entre una cosa y la otra. Un minuto para vos.",
+};
+
+/** Acto II — el sorbo. El centro emocional: de acá viene el nombre. */
+export const SORBO = {
+  marca: "El nombre",
+  titulo: "Un sorbo.",
+  texto: [
+    "Por unos segundos todo baja la velocidad. El ruido queda afuera. Volvés al presente.",
+    "Después seguís, claro que seguís. Pero ese momento ya cambió algo.",
+  ],
+  firma: "De ese gesto viene Zorvo.",
+};
+
+/** Acto III — el Club, contado como un ritual de tres pasos. */
+export const CLUB = {
+  marca: "El Club",
+  titulo: "Tomás café. Nos acordamos. Te llevás una gorra.",
+  texto:
+    "Gratis y sin letra chica. No hay puntos que vencen ni tarjetitas de cartón que se pierden en la billetera. Tomás café y el recorrido avanza solo.",
+};
+
+/** Acto IV — la carta como colección. */
+export const COLECCION = {
+  marca: "La carta",
+  titulo: "Trece cafés. Ninguno de relleno.",
+  promesa: "Probá los trece y la gorra es tuya.",
+  nota: "Sin precios acá: para eso está el mostrador.",
+};
+
+export const CIERRE = {
+  titulo: "Tu próximo café ya cuenta.",
+  texto: "Sumarte lleva treinta segundos. La credencial vive en tu teléfono y funciona sin señal.",
+};
+
+/** /join — el alta. Continúa donde termina la landing: una casilla llena. */
+export const ALTA = {
+  marca: "El Club — alta en 30 segundos",
+  titulo: ["Sumate", "al Club."],
+  promesas: ["Gratis.", "Sin letra chica.", "Trece cafés, una gorra."],
+  casillas: "La primera casilla se llena con tu próximo café.",
+};

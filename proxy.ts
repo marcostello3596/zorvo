@@ -10,7 +10,7 @@ import { clientEnv } from "@/lib/env";
  * vence, sin este middleware el socio queda deslogueado en silencio en medio
  * del mostrador. Acá es el único lugar donde la cookie se puede renovar.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(

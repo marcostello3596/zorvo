@@ -10,11 +10,14 @@ export function Marquee({
   seconds = 30,
   className = "",
   repeat = 4,
+  reverse = false,
 }: {
   children: ReactNode;
   seconds?: number;
   className?: string;
   repeat?: number;
+  /** Corre hacia el otro lado. Dos filas en sentidos opuestos = la ciudad. */
+  reverse?: boolean;
 }) {
   const items = Array.from({ length: repeat });
   return (
@@ -22,7 +25,7 @@ export function Marquee({
       className={`overflow-hidden ${className}`}
       style={{ ["--marquee-duration" as string]: `${seconds}s` }}
     >
-      <div className="zrv-marquee-track">
+      <div className={`zrv-marquee-track ${reverse ? "zrv-marquee-track--reverse" : ""}`}>
         <div className="flex shrink-0">
           {items.map((_, i) => (
             <span key={i} className="flex items-center">

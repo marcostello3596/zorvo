@@ -66,7 +66,7 @@ export function FormularioIngreso() {
             placeholder="vos@ejemplo.com"
             aria-describedby={estado.error ? "error" : undefined}
             aria-invalid={estado.error ? true : undefined}
-            className="h-14 w-full rounded-[2px] border-2 border-[var(--zrv-espresso-500)] bg-[var(--zrv-espresso-800)] px-4 text-lg text-cream placeholder:text-[var(--zrv-espresso-400)] focus:border-venus focus:outline-none"
+            className="h-14 w-full rounded-[2px] border-2 border-[var(--zrv-espresso-500)] bg-[var(--zrv-espresso-800)] px-4 text-lg text-cream placeholder:text-[var(--zrv-espresso-300)] focus:border-venus focus:outline-none"
           />
         </div>
 

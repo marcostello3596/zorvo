@@ -22,9 +22,9 @@ const COLUMNAS = [
     contenido: (
       <>
         {SITE.horarios.map((h) => (
-          <span key={h.dias} className="block">
+          <span key={h.dias} className="mb-1 block">
             {h.dias}
-            <span className="zrv-data ml-2 text-[var(--zrv-espresso-300)]">{h.horas}</span>
+            <span className="zrv-data block whitespace-nowrap text-[var(--zrv-espresso-300)]">{h.horas}</span>
           </span>
         ))}
       </>
