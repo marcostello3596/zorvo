@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZORVO Cool Brew Coffee</title>
+<meta name="description" content="ZORVO. Café al paso, bien hecho. Sumate al club de la Z: cada café es una Z y a la décima invitamos nosotros.">
+<meta name="theme-color" content="#F3F5EE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Caveat+Brush&family=JetBrains+Mono:wght@400;600;700&display=swap">
+</head>
+<body>
+
+<!-- Filtros SVG compartidos: tinta de sello para las Z -->
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="z-ink" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves="2" seed="4" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -9 0 0 0 6.2" result="speck"/>
+      <feComposite in="SourceGraphic" in2="speck" operator="in" result="tex"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="11" result="w"/>
+      <feDisplacementMap in="tex" in2="w" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+<!-- Preloader: la tarjeta se llena -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__inner">
+    <div class="loader__grid" data-loader-grid></div>
+    <div class="loader__row">
+      <span class="loader__count" data-loader-count>00</span>
+      <span class="label">/10<br>Preparando tu café</span>
+    </div>
+  </div>
+</div>
+
+<!-- Transición entre vistas -->
+<div class="curtain" id="curtain" aria-hidden="true">
+  <div class="curtain__panel"><span class="curtain__mascot" data-svg="mascot"></span></div>
+</div>
+
+<header class="topbar" id="topbar">
+  <a class="topbar__logo" href="#" data-route="home" aria-label="ZORVO, ir al inicio"><span data-svg="logo"></span></a>
+  <nav class="topbar__nav" aria-label="Principal">
+    <a class="pill pill--ink topbar__cta" href="#app" data-route="app" data-topbar-cta>
+      <span class="pill__z" data-svg="zsolid"></span><span data-topbar-label>Mi tarjeta</span>
+    </a>
+  </nav>
+</header>
+
+<!-- ============================ LANDING ============================ -->
+<main class="view view--landing" id="view-landing">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <div class="hero__meta">
+        <span class="label">Café al paso</span>
+        <span class="label">Club de la Z</span>
+      </div>
+
+      <h1 class="hero__logo" id="hero-title">
+        <span class="sr-only">ZORVO</span>
+        <span class="hero__gl" id="hero-gl">
+          <span class="hero__svg" data-svg="logo"></span>
+        </span>
+      </h1>
+
+      <div class="hero__sub">
+        <span class="hero__slogan" data-svg="slogan" role="img" aria-label="Cool brew coffee"></span>
+        <span class="hero__est" data-svg="est" role="img" aria-label="Establecido en 2026"></span>
+      </div>
+
+      <div class="hero__body">
+        <div class="hero__copy">
+          <p class="hero__lede">El café de todos los días, ahora suma. Cada café que pedís es una <span class="zinline" data-svg="zsolid"></span>. Juntás diez y el próximo va por nuestra cuenta.</p>
+          <div class="hero__ctas">
+            <a class="btn-wallet" href="#registro" data-route="registro">
+              <span class="btn-wallet__icon" data-svg="wallet"></span>
+              <span class="btn-wallet__txt"><small>Agregar a</small>Apple Wallet</span>
+            </a>
+            <a class="link-arrow" href="#app" data-route="app">Ver mi tarjeta <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="hero__fine label">Gratis · Sin apps · Android muy pronto</p>
+        </div>
+
+        <span class="zst zst--hero" style="--t:31%;--rr:-14px;--s:66px;--rot:16deg" data-speed="0.6" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+        <div class="hero__stage" data-hero-stage>
+          <div class="hero__walker" data-walker>
+            <span class="hero__steam" data-svg="steam"></span>
+            <span data-svg="walker"></span>
+          </div>
+          <span class="hero__badge" data-badge="hero"></span>
+          <span class="doodle doodle--sparkle hero__sp1" data-svg="sparkle"></span>
+          <span class="doodle doodle--sparkle hero__sp2" data-svg="sparkle"></span>
+          <svg class="hero__ground" viewBox="0 0 400 20" preserveAspectRatio="none" aria-hidden="true"><path d="M2 12C80 8 150 15 230 10s130 2 168-1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <span class="zst" style="--t:-6%;--l:64%;--s:86px;--rot:-12deg" data-speed="0.35" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+    <div class="band band--k"><div class="band__track" data-band="-1"></div></div>
+    <div class="band band--y"><div class="band__track" data-band="1"></div></div>
+  </div>
+
+  <!-- MANIFIESTO -->
+  <section class="manifesto" aria-labelledby="manifesto-title">
+    <span class="zst" style="--t:3%;--rr:-26px;--s:104px;--rot:22deg" data-speed="0.7" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+    <span class="zst" style="--t:84%;--rr:7%;--s:54px;--rot:-20deg" data-speed="0.4" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+    <div class="wrap">
+      <p class="label section-label">La historia</p>
+      <h2 class="manifesto__big" id="manifesto-title" data-split>La ciudad no frena. La gente va. Viene. Corre. Llega tarde. Sale antes.</h2>
+
+      <div class="manifesto__row">
+        <p class="manifesto__small">Y en medio de todo eso existen esos pequeños momentos que hacen que el día se sienta distinto. Un café antes de arrancar. Una pausa entre una cosa y la otra. Un minuto para vos antes de seguir. <strong>ZORVO nace para estar ahí.</strong></p>
+        <span class="manifesto__leaner" data-svg="leaner" data-leaner></span>
+      </div>
+
+
+      <blockquote class="quote">
+        <p>Aunque el momento sea corto, merece ser bueno. <mark class="quote__mark">Muy bueno.<span class="quote__ul" data-svg="underline"></span></mark></p>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="steps" aria-labelledby="steps-title">
+    <span class="zst" style="--t:44px;--rr:-18px;--s:78px;--rot:-8deg" data-speed="0.5" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+    <div class="wrap">
+      <p class="label section-label">El club de la Z</p>
+      <h2 class="h-display" id="steps-title">Tres pasos.<br>Cero vueltas.</h2>
+
+      <ol class="steps__list">
+        <li class="step step--paper" style="--i:0">
+          <span class="step__num" aria-hidden="true">1</span>
+          <span class="step__art step__art--phone" data-svg="phone"></span>
+          <div class="step__txt">
+            <h3>Sumá tu tarjeta</h3>
+            <p>Dejás tu nombre y la guardás en Apple Wallet. No hay que descargar nada.</p>
+          </div>
+        </li>
+        <li class="step step--ink" style="--i:1">
+          <span class="step__num" aria-hidden="true">2</span>
+          <span class="step__art step__art--qr" data-svg="qr"></span>
+          <div class="step__txt">
+            <h3>Mostrá tu QR</h3>
+            <p>Al pedir, el barista lo escanea. Dos segundos y listo.</p>
+          </div>
+        </li>
+        <li class="step step--yellow" style="--i:2">
+          <span class="step__num" aria-hidden="true">3</span>
+          <span class="step__art step__art--z"><span class="step__zgrid" data-zgrid="5"></span></span>
+          <div class="step__txt">
+            <h3>Juntá diez Z</h3>
+            <p>Cada café marca una Z. A la décima, el café va por nuestra cuenta.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- DEMO TARJETA -->
+  <section class="demo" aria-labelledby="demo-title">
+    <span class="zst" style="--t:5%;--rr:5%;--s:60px;--rot:18deg" data-speed="0.45" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+    <div class="wrap">
+      <p class="label section-label">Probala</p>
+      <h2 class="h-display" id="demo-title">Así se siente<br>sumar una Z.</h2>
+
+      <div class="demo__stage" data-demo>
+        <div class="demo__card" data-demo-card data-cursor="Inclinala"></div>
+        <div class="demo__controls">
+          <button class="btn btn--ink demo__btn" type="button" data-demo-btn>
+            <span class="demo__btn-cup" data-svg="cup"></span><span data-demo-btn-label>Pedir un café</span>
+          </button>
+          <p class="demo__count"><span class="label">Tus Z</span> <b data-demo-count>3</b><span>/10</span></p>
+          <span class="demo__note">tocá acá<span class="demo__arrow" data-svg="arrow"></span></span>
+        </div>
+      </div>
+      <p class="demo__fine label">Es una demo. Tus Z de verdad se suman en el local.</p>
+    </div>
+  </section>
+
+  <!-- WALLET -->
+  <section class="wallet" aria-labelledby="wallet-title">
+    <span class="zst" style="--t:54%;--l:-22px;--s:96px;--rot:-16deg" data-speed="0.6" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+    <span class="zst" style="--t:auto;--b:-34px;--rr:9%;--s:70px;--rot:10deg" data-speed="0.25" aria-hidden="true"><span class="zst__in" data-svg="zsticker"></span></span>
+    <div class="wrap wallet__grid">
+      <div class="wallet__copy">
+        <p class="label section-label">Apple Wallet</p>
+        <h2 class="h-display" id="wallet-title">Tu tarjeta vive en tu iPhone.</h2>
+        <p class="wallet__lede">Sin apps y sin papelitos que se pierden. El pase se actualiza solo cada vez que sumás una Z y te avisa cuando tenés un café de regalo.</p>
+        <div class="wallet__ctas">
+          <a class="btn-wallet" href="#registro" data-route="registro">
+            <span class="btn-wallet__icon" data-svg="wallet"></span>
+            <span class="btn-wallet__txt"><small>Agregar a</small>Apple Wallet</span>
+          </a>
+          <span class="label wallet__soon">Android llega pronto</span>
+        </div>
+      </div>
+
+      <div class="phone" data-phone>
+        <div class="phone__screen">
+          <span class="phone__island" aria-hidden="true"></span>
+          <p class="phone__time" aria-hidden="true">08:42</p>
+          <div class="phone__stack" aria-hidden="true"><span></span><span></span></div>
+          <div class="phone__pass" data-phone-pass></div>
+          <div class="phone__notif" data-phone-notif>
+            <span class="phone__notif-icon" data-svg="zsolid"></span>
+            <span><b>ZORVO</b>Sumaste una Z. Te faltan 3 para tu café de regalo.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <span class="footer__badge" data-badge="footer"></span>
+      <p class="footer__claim">Los momentos más breves merecen estar bien hechos.</p>
+    </div>
+    <div class="footer__logo" data-footer-logo data-svg="logo" role="img" aria-label="ZORVO"></div>
+    <div class="footer__row">
+      <span class="footer__slogan" data-svg="slogan"></span>
+      <span class="footer__mascot" data-svg="mascot"></span>
+    </div>
+    <nav class="footer__nav" aria-label="Pie de página">
+      <a href="#app" data-route="app">Mi tarjeta</a>
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://maps.google.com/?q=ZORVO+coffee" target="_blank" rel="noopener">Cómo llegar</a>
+      <a href="#registro" data-route="registro">Sumarme al club</a>
+    </nav>
+    <p class="footer__legal label">© 2026 ZORVO · Cool brew coffee · Est. 2026</p>
+  </footer>
+</main>
+
+<!-- ============================ WEB APP ============================ -->
+<main class="view view--app" id="view-app" hidden>
+  <div class="app">
+
+    <!-- Mi tarjeta -->
+    <section class="screen" data-screen="app" aria-labelledby="app-hello">
+      <div class="app-hello">
+        <div>
+          <p class="label" data-app-member>Miembro N° 0482</p>
+          <h1 class="app-hello__name" id="app-hello">Hola, <span data-app-name>Juli</span></h1>
+        </div>
+        <span class="app-hello__mascot" data-svg="mascot"></span>
+      </div>
+
+      <div class="app-card" data-app-card></div>
+
+      <p class="app-progress" data-app-progress>Te faltan 4 Z para tu café de regalo.</p>
+
+      <div class="app-actions">
+        <button class="btn btn--ink btn--block" type="button" data-open-qr>
+          <span class="btn__ico" data-svg="qr"></span>Mostrar mi QR
+        </button>
+        <button class="btn-wallet btn-wallet--block" type="button" data-open-wallet>
+          <span class="btn-wallet__icon" data-svg="wallet"></span>
+          <span class="btn-wallet__txt"><small>Agregar a</small>Apple Wallet</span>
+        </button>
+      </div>
+
+      <button class="demo-chip" type="button" data-simulate>
+        <span class="demo-chip__tag">Demo</span> Simular que el barista escanea tu QR
+      </button>
+
+      <div class="app-recent">
+        <div class="app-recent__head">
+          <h2>Últimos cafés</h2>
+          <a href="#historial" data-route="historial" class="link-arrow link-arrow--sm">Ver todo <span aria-hidden="true">→</span></a>
+        </div>
+        <ul class="hist" data-app-recent></ul>
+      </div>
+
+      <button class="app-reset label" type="button" data-reset>Reiniciar demo</button>
+    </section>
+
+    <!-- Historial -->
+    <section class="screen" data-screen="historial" aria-labelledby="hist-title" hidden>
+      <p class="label">Club de la Z</p>
+      <h1 class="h-display h-display--app" id="hist-title">Tus cafés</h1>
+      <div class="hist-stats" data-hist-stats></div>
+      <div data-hist-groups></div>
+    </section>
+
+    <!-- Registro -->
+    <section class="screen" data-screen="registro" aria-labelledby="reg-title" hidden>
+      <div class="reg">
+        <span class="reg__mascot" data-svg="mascot"></span>
+        <p class="label">Club de la Z</p>
+        <h1 class="h-display h-display--app" id="reg-title">Sumate al club.</h1>
+        <p class="reg__lede">Tu tarjeta en 20 segundos. Cada café que pidas es una Z y a la décima invitamos nosotros.</p>
+        <form class="reg__form" data-reg-form novalidate>
+          <div class="field">
+            <label for="reg-name">Tu nombre</label>
+            <input id="reg-name" name="name" type="text" autocomplete="given-name" placeholder="Como te dicen en la barra" required maxlength="24">
+          </div>
+          <div class="field">
+            <label for="reg-contact">Email o celular</label>
+            <input id="reg-contact" name="contact" type="text" autocomplete="email" inputmode="email" placeholder="vos@mail.com" required>
+            <p class="field__err" data-reg-err hidden></p>
+          </div>
+          <button class="btn btn--yellow btn--block" type="submit">Crear mi tarjeta</button>
+          <p class="reg__fine">Al crearla aceptás los términos del club. Nada de spam: solo te avisamos cuando tenés un café de regalo.</p>
+        </form>
+        <button class="link-arrow link-arrow--sm reg__demo" type="button" data-route="app">Ver la demo con datos de ejemplo <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+  </div>
+
+  <nav class="tabbar" aria-label="Web app">
+    <a class="tabbar__item" href="#app" data-route="app" data-tab="app">
+      <span class="tabbar__ico" data-svg="cardico"></span><span>Tarjeta</span>
+    </a>
+    <button class="tabbar__qr" type="button" data-open-qr aria-label="Mostrar mi QR">
+      <span data-svg="qr"></span>
+    </button>
+    <a class="tabbar__item" href="#historial" data-route="historial" data-tab="historial">
+      <span class="tabbar__ico" data-svg="listico"></span><span>Historial</span>
+    </a>
+  </nav>
+
+  <!-- Hoja QR -->
+  <div class="sheet" data-sheet="qr" hidden>
+    <div class="sheet__backdrop" data-close></div>
+    <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="qr-title">
+      <span class="sheet__grab" aria-hidden="true"></span>
+      <div class="sheet__head">
+        <h2 id="qr-title">Tu QR</h2>
+        <button class="sheet__x" type="button" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="qr-box">
+        <div class="qr-box__code" data-qr></div>
+        <div class="qr-box__meta">
+          <span class="label" data-qr-id>ZRV-0482-1734</span>
+          <span class="qr-timer"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle class="qr-timer__ring" cx="12" cy="12" r="10" pathLength="100"/></svg><span data-qr-left>30</span>s</span>
+        </div>
+      </div>
+      <p class="sheet__hint">Subí el brillo y mostráselo al barista. El código se renueva solo para que nadie pueda usar una captura.</p>
+      <button class="demo-chip demo-chip--block" type="button" data-simulate>
+        <span class="demo-chip__tag">Demo</span> Simular escaneo
+      </button>
+    </div>
+  </div>
+
+  <!-- Hoja Wallet -->
+  <div class="sheet" data-sheet="wallet" hidden>
+    <div class="sheet__backdrop" data-close></div>
+    <div class="sheet__panel sheet__panel--wallet" role="dialog" aria-modal="true" aria-labelledby="wallet-sheet-title">
+      <span class="sheet__grab" aria-hidden="true"></span>
+      <div class="sheet__head">
+        <button class="sheet__txtbtn" type="button" data-close>Cancelar</button>
+        <h2 id="wallet-sheet-title">Pase ZORVO</h2>
+        <button class="sheet__txtbtn sheet__txtbtn--strong" type="button" data-wallet-add>Agregar</button>
+      </div>
+      <div class="sheet__pass" data-wallet-pass></div>
+      <p class="sheet__hint">Vista previa del pase. La conexión real con Apple Wallet llega en la próxima etapa.</p>
+    </div>
+  </div>
+
+  <!-- Escaneo (modo barista) -->
+  <div class="scan" data-scan hidden>
+    <div class="scan__box">
+      <span class="scan__qr" data-svg="qr"></span>
+      <span class="scan__line"></span>
+    </div>
+    <p class="scan__txt" data-scan-txt>Leyendo QR…</p>
+  </div>
+
+  <!-- Premio -->
+  <div class="reward" data-reward hidden role="dialog" aria-modal="true" aria-labelledby="reward-title">
+    <div class="reward__inner">
+      <span class="reward__mascot" data-svg="mascot"></span>
+      <p class="label">Tarjeta completa · 10/10</p>
+      <h2 class="reward__title" id="reward-title">Café de regalo</h2>
+      <p class="reward__txt">Tu próximo café va por nuestra cuenta. Mostrá este código cuando pidas.</p>
+      <div class="reward__qr" data-reward-qr></div>
+      <button class="btn btn--ink btn--block" type="button" data-redeem>Ya lo canjeé <span class="label">(demo)</span></button>
+      <button class="reward__later" type="button" data-reward-close>Lo canjeo después</button>
+    </div>
+  </div>
+</main>
+
+<div class="toast" data-toast role="status" aria-live="polite" hidden></div>
+<div class="confetti" data-confetti aria-hidden="true"></div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
