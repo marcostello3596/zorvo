@@ -148,14 +148,15 @@
 /* ================= Z de la tarjeta ================= */
 .zslot { display: block; position: relative; line-height: 0; }
 .zslot__svg { width: 100%; height: auto; overflow: visible; }
+.zslot__ink { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transform-origin: 50% 50%; }
 .z-out { fill: none; stroke: var(--bordo); stroke-width: 4.5; stroke-linejoin: round; opacity: .85; }
-.z-fill { fill: var(--bordo); opacity: 0; filter: url(#z-ink); }
+.z-fill { fill: var(--bordo); filter: url(#z-ink); }
 .zslot.is-on .z-out { opacity: 0.25; }
-.zslot.is-on .z-fill { opacity: 1; }
+.zslot.is-on .zslot__ink { opacity: 1; }
 
 /* ================= tarjeta de fidelidad ================= */
 .loyalty { position: relative; width: 100%; max-width: 460px; margin-inline: auto; perspective: 1300px; touch-action: pan-y; }
-.loyalty__tilt { position: relative; transform-style: preserve-3d; }
+.loyalty__tilt { position: relative; transform-style: preserve-3d; will-change: transform; }
 .loyalty__inner { position: relative; aspect-ratio: 1.586; transform-style: preserve-3d; }
 .loyalty__face {
   position: absolute;
@@ -163,9 +164,9 @@
   border-radius: 18px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  overflow: hidden;
 }
 .loyalty__front {
+  transform: rotateY(0deg);   /* Safari necesita un transform para respetar backface-visibility */
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   padding: 4.2% 5% 3.6%;
@@ -183,9 +184,9 @@
   /* textura de cartulina */
   content: "";
   position: absolute; inset: 0;
+  border-radius: inherit;
   pointer-events: none;
-  opacity: .5;
-  mix-blend-mode: multiply;
+  opacity: .4;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .42 0 0 0 0 .38 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
 }
 .loyalty__top { display: flex; align-items: center; justify-content: space-between; }
@@ -230,9 +231,9 @@
 .loyalty__count span { display: inline-block; }
 .loyalty__shine {
   position: absolute; inset: 0;
+  border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(60% 50% at var(--sx, 30%) var(--sy, 20%), rgba(255, 255, 255, .5), transparent 70%);
-  mix-blend-mode: soft-light;
+  background: radial-gradient(60% 50% at var(--sx, 30%) var(--sy, 20%), rgba(255, 255, 255, .3), transparent 70%);
 }
 .loyalty__back {
   transform: rotateY(180deg);

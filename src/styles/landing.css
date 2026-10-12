@@ -257,8 +257,7 @@
 .footer__top { display: flex; align-items: center; gap: 18px; }
 .footer__badge { width: 108px; flex: none; }
 .footer__claim { font-family: var(--font-display); font-weight: 700; font-stretch: 75%; font-size: clamp(22px, 6.2vw, 40px); line-height: 1; text-transform: uppercase; text-wrap: balance; }
-.footer__logo { width: 100%; color: var(--yellow); cursor: pointer; }
-.footer__logo path { transform-box: fill-box; }
+.footer__logo { width: 100%; color: var(--yellow); }
 .footer__row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
 .footer__slogan { width: min(60%, 420px); color: var(--paper); }
 .footer__mascot { width: clamp(70px, 19vw, 130px); color: var(--yellow); }

@@ -54,9 +54,14 @@ export function hydrateSvgs(root = document) {
   });
 }
 
-/** Una Z para la tarjeta: contorno (vacía) + relleno (sellada). */
+/**
+ * Una Z para la tarjeta en dos capas: contorno (vacía) + tinta (sellada).
+ * La tinta es su propio <svg> para animarla con transform CSS: el filtro de
+ * textura se dibuja una sola vez y el celular solo mueve una imagen (fluido).
+ */
 export function zSlot(extra = '') {
-  return `<svg class="zslot__svg ${extra}" viewBox="${Z.vb}" aria-hidden="true" focusable="false"><g transform="${Z.t}"><path class="z-out" d="${Z.d}"/><path class="z-fill" d="${Z.d}"/></g></svg>`;
+  return `<svg class="zslot__svg zslot__out ${extra}" viewBox="${Z.vb}" aria-hidden="true" focusable="false"><g transform="${Z.t}"><path class="z-out" d="${Z.d}"/></g></svg>`
+    + `<svg class="zslot__svg zslot__ink" viewBox="${Z.vb}" aria-hidden="true" focusable="false"><g transform="${Z.t}"><path class="z-fill" d="${Z.d}"/></g></svg>`;
 }
 
 let badgeId = 0;

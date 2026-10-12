@@ -55,7 +55,7 @@ function routeFromHash() {
   return APP_SCREENS.includes(h) ? h : 'home';
 }
 
-function applyRoute(route) {
+function applyRoute(route, { enterDelay = 0 } = {}) {
   const toApp = route !== 'home';
   views.landing.hidden = toApp;
   views.app.hidden = !toApp;
@@ -66,18 +66,35 @@ function applyRoute(route) {
   topbar.classList.toggle('show-logo', toApp);
   if (toApp) {
     landing.disable();
-    app.show(route);
+    app.show(route, { delay: enterDelay });
   } else {
     landing.enable();
     landing.startGL();
+    if (enterDelay) gsap.delayedCall(enterDelay, () => landing.intro());
   }
   current = route;
   scrollTop();
 }
 
 const curtain = document.getElementById('curtain');
-const panel = curtain.querySelector('.curtain__panel');
+const cPath = curtain.querySelector('.curtain__path');
+const cMascot = curtain.querySelector('.curtain__mascot');
 let transitioning = false;
+
+// Cortina: un rectángulo negro con el borde curvo (sube desde abajo y se va por arriba).
+// Se dibuja con un path SVG para que siempre cubra la pantalla entera.
+const shape = { t: 0 };
+const BULGE = 18;
+const drawIn = () => {
+  const y = 100 - 100 * shape.t;
+  const c = Math.sin(shape.t * Math.PI) * BULGE;
+  cPath.setAttribute('d', `M0 100 L0 ${y} Q50 ${y - c} 100 ${y} L100 100 Z`);
+};
+const drawOut = () => {
+  const y = 100 - 100 * shape.t;
+  const c = Math.sin(shape.t * Math.PI) * BULGE;
+  cPath.setAttribute('d', `M0 0 L0 ${y} Q50 ${y - c} 100 ${y} L100 0 Z`);
+};
 
 function navigate(route, { instant = false, push = true } = {}) {
   if (transitioning || route === current) return;
@@ -86,14 +103,24 @@ function navigate(route, { instant = false, push = true } = {}) {
   }
   const sameView = (route === 'home') === (current === 'home');
   if (instant || reduced || sameView || current === null) { applyRoute(route); return; }
+
   transitioning = true;
   curtain.style.visibility = 'visible';
-  gsap.timeline({ onComplete: () => { transitioning = false; curtain.style.visibility = 'hidden'; } })
-    .fromTo(panel, { yPercent: 100, borderRadius: '50% 50% 0 0 / 14vh 14vh 0 0' }, { yPercent: 0, borderRadius: '0% 0% 0 0 / 0vh 0vh 0 0', duration: 0.6, ease: 'expo.in' })
-    .fromTo('.curtain__mascot', { scale: 0.4, rotation: -30, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.45, ease: 'back.out(2)' }, '-=0.15')
-    .add(() => applyRoute(route))
-    .to(panel, { yPercent: -100, borderRadius: '0 0 50% 50% / 0 0 14vh 14vh', duration: 0.7, ease: 'expo.inOut' }, '+=0.12')
-    .to('.curtain__mascot', { yPercent: -60, opacity: 0, duration: 0.4, ease: 'power2.in' }, '<');
+  curtain.classList.add('is-active');
+  gsap.timeline({
+    onComplete: () => {
+      transitioning = false;
+      curtain.style.visibility = 'hidden';
+      curtain.classList.remove('is-active');
+      cPath.setAttribute('d', 'M0 100 L100 100 Z');
+    },
+  })
+    .fromTo(shape, { t: 0 }, { t: 1, duration: 0.62, ease: 'power3.inOut', onUpdate: drawIn })
+    .fromTo(cMascot, { opacity: 0, scale: 0.5, rotation: -25, y: 40 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.5, ease: 'back.out(2.2)' }, '-=0.2')
+    .add(() => applyRoute(route, { enterDelay: 0.3 }))
+    .addLabel('out', '+=0.2')
+    .fromTo(shape, { t: 0 }, { t: 1, duration: 0.8, ease: 'power3.inOut', onUpdate: drawOut, immediateRender: false }, 'out')
+    .to(cMascot, { y: -90, opacity: 0, duration: 0.45, ease: 'power2.in' }, 'out');
 }
 
 document.addEventListener('click', (e) => {
@@ -120,7 +147,7 @@ async function boot() {
     return;
   }
   const count = loader.querySelector('[data-loader-count]');
-  const fills = [...grid.querySelectorAll('.z-fill')];
+  const fills = [...grid.querySelectorAll('.zslot__ink')];
   const n = { v: 0 };
   const tl = gsap.timeline();
   tl.to(n, { v: 10, duration: 1.1, ease: 'power2.inOut', onUpdate: () => { count.textContent = String(Math.round(n.v)).padStart(2, '0'); } }, 0);

@@ -6,7 +6,7 @@ import { haptic } from '../lib/fx.js';
  * Tarjeta de fidelidad ZORVO: 10 Z que se sellan.
  * Estructura: .loyalty (perspectiva) > .loyalty__tilt (inclinación) > .loyalty__inner (giro) > caras
  */
-export function createLoyaltyCard({ stamps = 0, total = 10, number = '0482', name = '', tilt = true } = {}) {
+export function createLoyaltyCard({ stamps = 0, total = 10, number = '0482', name = '', tilt = true, idle = false } = {}) {
   const el = document.createElement('div');
   el.className = 'loyalty';
   el.innerHTML = `
@@ -37,7 +37,7 @@ export function createLoyaltyCard({ stamps = 0, total = 10, number = '0482', nam
     </div>`;
 
   const slots = [...el.querySelectorAll('.zslot')];
-  const fills = slots.map((s) => s.querySelector('.z-fill'));
+  const fills = slots.map((s) => s.querySelector('.zslot__ink'));
   const countEl = el.querySelector('[data-count]');
   const inner = el.querySelector('.loyalty__inner');
   const tiltEl = el.querySelector('.loyalty__tilt');
@@ -116,12 +116,15 @@ export function createLoyaltyCard({ stamps = 0, total = 10, number = '0482', nam
     return gsap.to(inner, { rotationY: toBack ? 180 : 0, duration, ease: 'expo.inOut' });
   }
 
-  // Inclinación con puntero / dedo
-  let qx, qy;
-  if (tilt) {
-    qx = gsap.quickTo(tiltEl, 'rotationY', { duration: 0.6, ease: 'power3.out' });
-    qy = gsap.quickTo(tiltEl, 'rotationX', { duration: 0.6, ease: 'power3.out' });
-    const move = (e) => {
+  // Inclinación: con mouse sigue al puntero. Con el dedo NO (al scrollear quedaba
+  // trabada torcida); en su lugar, un "apretón" al tocar y un vaivén suave opcional.
+  const touch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (tilt && !touch) {
+    const qx = gsap.quickTo(tiltEl, 'rotationY', { duration: 0.6, ease: 'power3.out' });
+    const qy = gsap.quickTo(tiltEl, 'rotationX', { duration: 0.6, ease: 'power3.out' });
+    el.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
       const r = el.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width - 0.5;
       const py = (e.clientY - r.top) / r.height - 0.5;
@@ -129,9 +132,17 @@ export function createLoyaltyCard({ stamps = 0, total = 10, number = '0482', nam
       qy(-py * 14);
       shine.style.setProperty('--sx', `${(px + 0.5) * 100}%`);
       shine.style.setProperty('--sy', `${(py + 0.5) * 100}%`);
-    };
-    el.addEventListener('pointermove', move);
+    });
     el.addEventListener('pointerleave', () => { qx(0); qy(0); });
+  }
+  if (touch && !reducedMotion) {
+    el.addEventListener('pointerdown', () => gsap.to(tiltEl, { scale: 0.975, duration: 0.18, ease: 'power2.out', overwrite: 'auto' }));
+    const release = () => gsap.to(tiltEl, { scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
+    el.addEventListener('pointerup', release);
+    el.addEventListener('pointercancel', release);
+    if (idle) {
+      gsap.fromTo(tiltEl, { rotationY: -7, rotationX: 4 }, { rotationY: 7, rotationX: -3, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    }
   }
 
   setStamps(stamps);

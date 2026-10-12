@@ -25,7 +25,6 @@ export function initLanding({ reduced }) {
   const demo = setupDemo();
   setupStickers();
   watchTopbarLogo();
-  setupFooterLogo();
 
   function buildBands() {
     const items = ['Cool brew coffee', 'Cultura del buen café', 'Calidad al paso', 'Grab & go'];
@@ -40,7 +39,7 @@ export function initLanding({ reduced }) {
   // ---------- tarjeta interactiva
   function setupDemo() {
     const host = $('[data-demo-card]');
-    const card = createLoyaltyCard({ stamps: 3, number: '0001' });
+    const card = createLoyaltyCard({ stamps: 3, number: '0001', idle: true });
     host.append(card.el);
     const btn = $('[data-demo-btn]');
     const label = $('[data-demo-btn-label]');
@@ -107,21 +106,6 @@ export function initLanding({ reduced }) {
       topbar.classList.toggle('show-logo', !en.isIntersecting && en.boundingClientRect.top < 0);
     }, { rootMargin: '-72px 0px 0px 0px' });
     io.observe($('.hero__logo'));
-  }
-
-  // ---------- footer: las letras saltan
-  function setupFooterLogo() {
-    const logo = $('[data-footer-logo]');
-    const letters = [...logo.querySelectorAll('path')];
-    const hop = (el, i = 0) => {
-      if (gsap.isTweening(el)) return;
-      gsap.timeline({ delay: i * 0.05 })
-        .to(el, { y: -38, rotation: gsap.utils.random(-10, 10), duration: 0.22, ease: 'power2.out', transformOrigin: '50% 100%' })
-        .to(el, { y: 0, rotation: 0, duration: 0.7, ease: 'bounce.out' });
-    };
-    letters.forEach((l) => l.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hop(l); }));
-    logo.addEventListener('click', () => { letters.forEach((l, i) => hop(l, i)); haptic(10); });
-    logo.dataset.cursor = 'Tocá';
   }
 
   // ---------- animaciones de scroll
@@ -198,7 +182,7 @@ export function initLanding({ reduced }) {
     });
     gsap.fromTo('.step__art--qr .scan', { y: -22 }, { y: 22, duration: 1.1, ease: 'sine.inOut', yoyo: true, repeat: -1 });
     gsap.to('.step__art--phone', { y: -8, rotation: 3, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-    const zFills = $$('.step__zgrid .z-fill');
+    const zFills = $$('.step__zgrid .zslot__ink');
     const zl = gsap.timeline({ repeat: -1, repeatDelay: 0.6, scrollTrigger: { trigger: '.step--yellow', start: 'top bottom', toggleActions: 'play pause resume pause' } });
     zFills.forEach((f, i) => {
       zl.fromTo(f, { opacity: 1, scale: 2, rotation: -24, transformOrigin: '50% 50%' }, { scale: 1, rotation: gsap.utils.random(-10, 8), duration: 0.24, ease: 'power4.in' }, i * 0.32)
@@ -235,12 +219,6 @@ export function initLanding({ reduced }) {
     gsap.fromTo('[data-phone]', { rotation: 4 }, {
       rotation: -3, ease: 'none',
       scrollTrigger: { trigger: '.wallet', start: 'top bottom', end: 'bottom top', scrub: true },
-    });
-
-    // footer
-    gsap.from('.footer__logo path', {
-      yPercent: 70, rotation: () => gsap.utils.random(-12, 12), stagger: 0.06, ease: 'none',
-      scrollTrigger: { trigger: '.footer', start: 'top bottom', end: 'top 40%', scrub: true },
     });
   }, root);
 

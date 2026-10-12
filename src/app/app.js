@@ -84,7 +84,7 @@ export function initApp({ reduced, navigate }) {
   }
 
   // ---------- pantallas
-  function show(name) {
+  function show(name, { delay = 0 } = {}) {
     screen = name;
     $$('[data-screen]').forEach((sc) => { sc.hidden = sc.dataset.screen !== name; });
     $$('[data-tab]').forEach((t) => t.classList.toggle('is-active', t.dataset.tab === name));
@@ -92,9 +92,9 @@ export function initApp({ reduced, navigate }) {
     window.scrollTo(0, 0);
     if (!reduced) {
       const sc = $(`[data-screen="${name}"]`);
-      gsap.from(sc.children, { y: 24, opacity: 0, stagger: 0.05, duration: 0.6, ease: 'expo.out', clearProps: 'all' });
+      gsap.from(sc.children, { y: 28, opacity: 0, stagger: 0.05, duration: 0.7, delay, ease: 'expo.out', clearProps: 'all' });
       if (name === 'app' && card) {
-        gsap.from(card.el, { rotationX: 40, y: 40, duration: 1, ease: 'expo.out', transformPerspective: 900, clearProps: 'transform' });
+        gsap.from(card.el, { rotationX: 40, y: 40, duration: 1.1, delay: delay + 0.05, ease: 'expo.out', transformPerspective: 900, clearProps: 'transform' });
       }
     }
   }
